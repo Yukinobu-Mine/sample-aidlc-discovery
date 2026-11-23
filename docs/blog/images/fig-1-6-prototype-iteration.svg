@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 380" width="980" height="380" role="img" aria-labelledby="title desc">
+  <title id="title">プロトタイプのイテレーション</title>
+  <desc id="desc">画面構成案を作り、test moment に印をつけてから v1 を作ります。チームが試用し、ペルソナが講評し、チームが直すものを選んで、新しいバージョンとして保存します。必要ならもう一度繰り返します。すべてのバージョンが残り、Validate で引き渡すバージョンを選びます。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6470"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif; fill: #1d2733; }
+    .h { font-size: 15px; font-weight: 700; }
+    .b { font-size: 13px; }
+    .m { fill: #5b6470; }
+    .tag { font-size: 11px; font-weight: 700; fill: #ffffff; }
+  </style>
+  <rect width="980" height="380" fill="#ffffff"/>
+
+  <!-- Boxes -->
+  <g stroke-width="1.5">
+    <rect x="20" y="40" width="140" height="110" rx="10" fill="#fdf3e3" stroke="#b86e00"/>
+    <rect x="180" y="40" width="140" height="110" rx="10" fill="#fdf3e3" stroke="#b86e00"/>
+    <rect x="340" y="40" width="140" height="110" rx="10" fill="#e8f0f9" stroke="#1f4e79" stroke-width="2"/>
+    <rect x="500" y="40" width="140" height="110" rx="10" fill="#fdf3e3" stroke="#b86e00"/>
+    <rect x="660" y="40" width="140" height="110" rx="10" fill="#e8f0f9" stroke="#1f4e79" stroke-width="2"/>
+    <rect x="820" y="40" width="140" height="110" rx="10" fill="#b86e00" stroke="#b86e00"/>
+  </g>
+  <g stroke="#5b6470" stroke-width="2" marker-end="url(#arrow)">
+    <line x1="162" y1="95" x2="177" y2="95"/>
+    <line x1="322" y1="95" x2="337" y2="95"/>
+    <line x1="482" y1="95" x2="497" y2="95"/>
+    <line x1="642" y1="95" x2="657" y2="95"/>
+    <line x1="802" y1="95" x2="817" y2="95"/>
+  </g>
+
+  <!-- Who tags -->
+  <rect x="352" y="14" width="56" height="20" rx="10" fill="#1f4e79"/>
+  <text x="380" y="28" text-anchor="middle" class="tag">チーム</text>
+  <rect x="672" y="14" width="56" height="20" rx="10" fill="#1f4e79"/>
+  <text x="700" y="28" text-anchor="middle" class="tag">チーム</text>
+
+  <text x="32" y="68" class="h">画面構成案</text>
+  <text x="32" y="94" class="b">4〜8 画面</text>
+  <text x="32" y="114" class="b">test moment に</text>
+  <text x="32" y="132" class="b">印をつける</text>
+
+  <text x="192" y="68" class="h">v1 を作る</text>
+  <text x="192" y="94" class="b">1 つの HTML</text>
+  <text x="192" y="114" class="b">Flow、Mobile、</text>
+  <text x="192" y="132" class="b">Desktop ビュー</text>
+
+  <text x="352" y="68" class="h">チームの試用</text>
+  <text x="352" y="94" class="b">主なペルソナの</text>
+  <text x="352" y="114" class="b">立場で一通り</text>
+  <text x="352" y="132" class="b">操作する</text>
+
+  <text x="512" y="68" class="h">ペルソナに</text>
+  <text x="512" y="88" class="h">よる講評</text>
+  <text x="512" y="114" class="b">迷う場所、初日に</text>
+  <text x="512" y="132" class="b">使う見込み</text>
+
+  <text x="672" y="68" class="h">直すものを選ぶ</text>
+  <text x="672" y="94" class="b">最もリスクの高い</text>
+  <text x="672" y="114" class="b">前提に関わる</text>
+  <text x="672" y="132" class="b">ものから</text>
+
+  <text x="832" y="68" class="h" style="fill:#ffffff">v2 を作る</text>
+  <text x="832" y="94" class="b" style="fill:#ffffff">新しいファイルに</text>
+  <text x="832" y="114" class="b" style="fill:#ffffff">保存し、変えた</text>
+  <text x="832" y="132" class="b" style="fill:#ffffff">理由を記録する</text>
+
+  <!-- Loop back -->
+  <path d="M890,154 V200 H410 V156" fill="none" stroke="#5b6470" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+  <text x="650" y="222" text-anchor="middle" class="b m">直すものが残っていれば、もう一度（会話を始められる状態になったら止める）</text>
+
+  <!-- Version stack -->
+  <g stroke="#b86e00" stroke-width="1.5">
+    <rect x="40" y="270" width="90" height="70" rx="6" fill="#ffffff"/>
+    <rect x="54" y="262" width="90" height="70" rx="6" fill="#ffffff"/>
+    <rect x="68" y="254" width="90" height="70" rx="6" fill="#fdf3e3"/>
+  </g>
+  <text x="113" y="284" text-anchor="middle" class="b" style="font-weight:700">v1 v2 v3 …</text>
+  <text x="113" y="306" text-anchor="middle" class="b m">すべて残る</text>
+  <text x="180" y="282" class="b">バージョンは上書きせず、すべて残す。何を、なぜ、誰の求めで変えたかを記録する。</text>
+  <text x="180" y="306" class="b">講評の指摘のうち、直したものと直さなかったものも、その理由とともに残す。</text>
+  <text x="180" y="330" class="b" style="font-weight:700">Validate で、開発に引き渡すバージョンを 1 つ選ぶ。</text>
+</svg>

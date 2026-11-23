@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1020 290" width="1020" height="290" role="img" aria-labelledby="title desc">
+  <title id="title">AI-DLC と AI-DLC Discovery の関係</title>
+  <desc id="desc">左に AI-DLC Discovery があり、何を誰のために作るかを決めます。Discovery brief が右の AI-DLC の Inception、Construction、Operations に渡ります。AI-DLC に進む場合、Discovery brief が Ideation の代わりになり、AI-DLC は Inception から始まります。AI-DLC で開発しない場合も、Discovery brief を開発の出発点として使えます。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6470"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif; fill: #1d2733; }
+    .h { font-size: 18px; font-weight: 700; }
+    .b { font-size: 13px; }
+    .m { fill: #5b6470; }
+    .lbl { font-size: 14px; font-weight: 700; }
+  </style>
+  <rect width="1020" height="290" fill="#ffffff"/>
+
+  <!-- group labels -->
+  <text x="142" y="36" text-anchor="middle" class="lbl" style="fill:#1f4e79">ディスカバリー</text>
+  <text x="680" y="36" text-anchor="middle" class="lbl m">デリバリー（AI-DLC で開発する場合）</text>
+  <path d="M360,52 V46 H1000 V52" fill="none" stroke="#9aa3ad" stroke-width="1.5"/>
+
+  <!-- Discovery -->
+  <rect x="20" y="62" width="245" height="130" rx="12" fill="#e8f0f9" stroke="#1f4e79" stroke-width="2.5"/>
+  <text x="142" y="98" text-anchor="middle" class="h" style="fill:#1f4e79">AI-DLC Discovery</text>
+  <text x="142" y="128" text-anchor="middle" class="b">何を、誰のために作るかを決める</text>
+  <text x="142" y="150" text-anchor="middle" class="b m">顧客シグナル → 決定 →</text>
+  <text x="142" y="170" text-anchor="middle" class="b m">開発への引き渡し</text>
+
+  <!-- handoff arrow -->
+  <line x1="270" y1="127" x2="354" y2="127" stroke="#5b6470" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="312" y="108" text-anchor="middle" class="b" style="font-weight:700;font-size:12px">Discovery</text>
+  <text x="312" y="150" text-anchor="middle" class="b" style="font-weight:700;font-size:12px">brief</text>
+
+  <!-- AI-DLC phases -->
+  <rect x="360" y="62" width="200" height="130" rx="12" fill="#f4f5f7" stroke="#9aa3ad" stroke-width="1.5"/>
+  <text x="460" y="98" text-anchor="middle" class="h">Inception</text>
+  <text x="460" y="128" text-anchor="middle" class="b">要求、ユーザーストーリー、</text>
+  <text x="460" y="148" text-anchor="middle" class="b">設計を作る</text>
+
+  <line x1="562" y1="127" x2="576" y2="127" stroke="#5b6470" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="580" y="62" width="200" height="130" rx="12" fill="#f4f5f7" stroke="#9aa3ad" stroke-width="1.5"/>
+  <text x="680" y="98" text-anchor="middle" class="h">Construction</text>
+  <text x="680" y="128" text-anchor="middle" class="b">コードを書き、</text>
+  <text x="680" y="148" text-anchor="middle" class="b">テストする</text>
+
+  <line x1="782" y1="127" x2="796" y2="127" stroke="#5b6470" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="800" y="62" width="200" height="130" rx="12" fill="#f4f5f7" stroke="#9aa3ad" stroke-width="1.5"/>
+  <text x="900" y="98" text-anchor="middle" class="h">Operations</text>
+  <text x="900" y="128" text-anchor="middle" class="b">デプロイし、</text>
+  <text x="900" y="148" text-anchor="middle" class="b">運用する</text>
+
+  <!-- notes -->
+  <text x="20" y="236" class="b">AI-DLC に進む場合、Discovery brief が AI-DLC の Ideation の代わりになり、AI-DLC は Inception から始まります。</text>
+  <text x="20" y="260" class="b m">AI-DLC で開発しない場合も、Discovery brief を開発の出発点として使えます。</text>
+</svg>

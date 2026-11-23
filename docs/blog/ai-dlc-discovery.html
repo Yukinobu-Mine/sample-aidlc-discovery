@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-DLC Discovery ワークショップ</title>
+<style>
+  :root {
+    --ink: #1d2733; --muted: #5b6470; --line: #dfe3ea; --bg: #f4f5f7;
+    --base: #1f4e79; --base-l: #e8f0f9;
+    --signals: #2563a8; --signals-l: #e8f0f9;
+    --wb: #6b46a8; --wb-l: #efe9f7;
+    --proto: #b86e00; --proto-l: #fdf3e3;
+    --validate: #b23b3b; --validate-l: #fbeaea;
+    --handoff: #2f7d4f; --handoff-l: #e8f3ec;
+    --font: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #20252c; overflow: hidden; }
+  body { font-family: var(--font); color: var(--ink); }
+  .deck { position: absolute; top: 50%; left: 50%; width: 1280px; height: 720px; transform-origin: center center; }
+
+  /* Slide frame */
+  .slide { --c: var(--base); --cl: var(--base-l); position: absolute; inset: 0; background: #fff; display: none; flex-direction: column; padding: 34px 60px 40px; overflow: hidden; }
+  .slide.active { display: flex; }
+  .slide[data-theme="signals"] { --c: var(--signals); --cl: var(--signals-l); }
+  .slide[data-theme="wb"] { --c: var(--wb); --cl: var(--wb-l); }
+  .slide[data-theme="proto"] { --c: var(--proto); --cl: var(--proto-l); }
+  .slide[data-theme="validate"] { --c: var(--validate); --cl: var(--validate-l); }
+  .slide[data-theme="handoff"] { --c: var(--handoff); --cl: var(--handoff-l); }
+  .slide::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 8px; background: var(--c); }
+  .chap { font-size: 16px; font-weight: 700; color: var(--c); letter-spacing: .02em; margin-bottom: 6px; }
+  .slide h2 { font-size: 36px; line-height: 1.3; margin: 0 0 20px; padding-left: 16px; border-left: 8px solid var(--c); }
+  .body { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 16px; }
+  .pno { position: absolute; right: 28px; bottom: 14px; font-size: 15px; color: var(--muted); }
+
+  p { font-size: 24px; line-height: 1.55; margin: 0; }
+  ul, ol { margin: 0; padding-left: 1.3em; }
+  li { font-size: 24px; line-height: 1.5; margin: 4px 0; }
+  .sm p, .sm li, p.sm { font-size: 20px; }
+  .xs p, .xs li, p.xs { font-size: 18px; }
+  .lead { font-size: 28px; line-height: 1.55; }
+  .muted { color: var(--muted); }
+  .note { font-size: 17px; color: var(--muted); }
+  b, strong { font-weight: 700; }
+  .accent { color: var(--c); font-weight: 700; }
+  code { font-family: Menlo, Consolas, monospace; font-size: .85em; background: var(--bg); padding: 1px 6px; border-radius: 4px; }
+  .en { font-weight: 700; }
+
+  /* Tables */
+  table { border-collapse: collapse; width: 100%; font-size: 21px; line-height: 1.4; }
+  th, td { border: 1px solid var(--line); padding: 7px 12px; text-align: left; vertical-align: top; }
+  th { background: var(--cl); color: var(--ink); font-weight: 700; white-space: nowrap; }
+  td:first-child { font-weight: 700; }
+  table.t17 { font-size: 19px; } table.t17 th, table.t17 td { padding: 6px 10px; }
+  table.t16 { font-size: 17px; } table.t16 th, table.t16 td { padding: 5px 10px; }
+  table.t15 { font-size: 16px; } table.t15 th, table.t15 td { padding: 4px 10px; }
+  td.c { text-align: center; }
+  .fn { font-size: 15px; color: var(--muted); font-weight: 400; font-family: Menlo, Consolas, monospace; display: block; }
+
+  /* Figures */
+  .fig { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+  .fig img { max-width: 100%; max-height: 100%; }
+
+  /* Layout helpers */
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .cols-64 { display: grid; grid-template-columns: 1.5fr 1fr; gap: 32px; }
+  .blocks { display: grid; gap: 20px; }
+  .b2 { grid-template-columns: 1fr 1fr; } .b3 { grid-template-columns: 1fr 1fr 1fr; } .b4 { grid-template-columns: 1fr 1fr; }
+  .block { background: var(--bg); border-top: 6px solid var(--c); border-radius: 8px; padding: 16px 20px; }
+  .block h3 { font-size: 23px; margin: 0 0 8px; color: var(--c); }
+  .block p, .block li { font-size: 20px; line-height: 1.5; }
+  .callout { background: var(--cl); border-left: 6px solid var(--c); border-radius: 6px; padding: 14px 20px; }
+  .callout p { font-size: 22px; }
+  .quote { font-size: 30px; font-weight: 700; line-height: 1.5; border-left: 8px solid var(--c); padding: 10px 24px; background: var(--cl); border-radius: 0 8px 8px 0; }
+
+  /* Steps (flow) */
+  .steps { display: flex; flex-wrap: wrap; gap: 10px 0; list-style: none; padding: 0; counter-reset: s; }
+  .steps li { counter-increment: s; font-size: 20px; margin: 0; padding: 10px 16px 10px 14px; background: var(--cl); border-radius: 8px; position: relative; margin-right: 26px; }
+  .steps li::before { content: counter(s); display: inline-block; width: 28px; height: 28px; line-height: 28px; text-align: center; border-radius: 50%; background: var(--c); color: #fff; font-weight: 700; font-size: 16px; margin-right: 8px; }
+  .steps li:not(:last-child)::after { content: "→"; position: absolute; right: -22px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 20px; }
+
+  /* Questions */
+  .qs { list-style: none; padding: 0; counter-reset: q; display: grid; gap: 12px; }
+  .qs li { counter-increment: q; font-size: 25px; line-height: 1.45; margin: 0; padding: 10px 16px 10px 64px; background: var(--bg); border-radius: 8px; position: relative; }
+  .qs li::before { content: "Q" counter(q); position: absolute; left: 14px; top: 10px; font-weight: 700; color: var(--c); }
+  .qs.two { grid-template-columns: 1fr 1fr; }
+  .qs.sm li { font-size: 22px; }
+
+  /* Checklist */
+  .check { list-style: none; padding: 0; display: grid; gap: 8px; }
+  .check li { font-size: 23px; margin: 0; padding-left: 38px; position: relative; line-height: 1.45; }
+  .check li::before { content: ""; position: absolute; left: 0; top: 5px; width: 22px; height: 22px; border: 2.5px solid var(--c); border-radius: 4px; }
+  .check.sm li { font-size: 21px; }
+  .ck-q { font-size: 30px; font-weight: 700; line-height: 1.45; padding: 18px 26px; background: var(--c); color: #fff; border-radius: 10px; }
+  .ck-label { font-size: 18px; font-weight: 700; color: var(--c); margin-bottom: 4px; }
+
+  /* Review points */
+  .rv { list-style: none; padding: 0; display: grid; gap: 6px; }
+  .rv li { font-size: 22px; margin: 0; padding-left: 28px; position: relative; line-height: 1.45; }
+  .rv li::before { content: "✓"; position: absolute; left: 0; color: var(--c); font-weight: 700; }
+  .rv.xs li { font-size: 19px; }
+  .rv.xxs li { font-size: 17px; line-height: 1.4; }
+  .pit { font-size: 19px; background: #fff7e6; border-left: 6px solid #b86e00; padding: 10px 16px; border-radius: 6px; line-height: 1.5; }
+  .pit b { color: #8a5a00; }
+  .h3 { font-size: 22px; font-weight: 700; color: var(--c); margin: 0 0 6px; }
+
+  /* Title & dividers */
+  .slide.cover { background: var(--base); color: #fff; justify-content: center; padding: 80px; }
+  .slide.cover::before { display: none; }
+  .cover h1 { font-size: 64px; margin: 0 0 24px; line-height: 1.25; }
+  .cover p { font-size: 30px; opacity: .9; }
+  .slide.divider { background: var(--c); color: #fff; padding: 64px 72px; }
+  .slide.divider::before { display: none; }
+  .divider .num { font-size: 22px; font-weight: 700; opacity: .85; }
+  .divider h1 { font-size: 60px; margin: 6px 0 10px; }
+  .divider .q { font-size: 32px; font-weight: 700; margin-bottom: 14px; }
+  .divider .aim { font-size: 22px; opacity: .92; margin-bottom: 28px; }
+  .divider .steps li { background: rgba(255,255,255,.16); color: #fff; }
+  .divider .steps li::before { background: #fff; color: var(--c); }
+  .divider .steps li:not(:last-child)::after { color: #fff; }
+  .divider .pno { color: rgba(255,255,255,.8); }
+  .tree { font-family: Menlo, Consolas, monospace; font-size: 19px; line-height: 1.55; background: var(--bg); padding: 18px 22px; border-radius: 8px; white-space: pre; margin: 0; }
+
+  /* Print: one slide per page */
+  @media print {
+    @page { size: 1280px 720px; margin: 0; }
+    html, body { background: #fff; overflow: visible; height: auto; }
+    .deck { position: static; transform: none !important; width: 1280px; height: auto; }
+    .slide { display: flex !important; position: relative; width: 1280px; height: 720px; break-after: page; page-break-after: always; }
+  }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<!-- ===================== 表紙と導入 ===================== -->
+<section class="slide cover">
+  <h1>AI-DLC Discovery<br>ワークショップ</h1>
+  <p>顧客の声から「最初に作るもの」を決める</p>
+</section>
+<section class="slide" data-chap="はじめに">
+  <h2>ディスカバリーとデリバリー</h2>
+  <div class="body">
+    <p>プロダクトマネジメントでは、開発の仕事を 2 つに分けて考えます（Marty Cagan『INSPIRED』）。</p>
+    <div class="blocks b2" style="margin-top:12px">
+      <div class="block"><h3 style="font-size:30px">ディスカバリー</h3><p style="font-size:24px">顧客が本当に必要としているものを見つけ、何を作るべきかを決める仕事</p></div>
+      <div class="block" style="border-top-color:#9aa3ad"><h3 style="font-size:30px;color:var(--ink)">デリバリー</h3><p style="font-size:24px">それを作って、顧客に届ける仕事</p></div>
+    </div>
+  </div>
+</section>
+<section class="slide" data-chap="はじめに">
+  <h2>デリバリーは速くなった</h2>
+  <div class="body">
+    <ul>
+      <li>AI コーディングアシスタントで、デリバリーは速くなった</li>
+      <li>でも、ディスカバリーが変わらなければ、顧客に届く価値は増えない</li>
+      <li>思い込みや声の大きい人の意見で決めれば、<b>顧客が必要としないものが早くできるだけ</b></li>
+      <li>開発が速いほど、間違った方向に進む距離も長くなる</li>
+    </ul>
+    <div class="quote" style="margin-top:20px">次に作る機能を選んだ根拠を、<br>顧客の言葉と数字で説明できますか？</div>
+  </div>
+</section>
+<!-- ===================== 1 章 ===================== -->
+<section class="slide" data-chap="1. AI-DLC Discovery とは">
+  <h2>AI-DLC Discovery とは</h2>
+  <div class="body">
+    <p>顧客の声に裏付けられたエビデンスで、ディスカバリーを行う方法論です。チームはワークショップの形で集まり、エージェントスキルを使って AI アシスタントと進めます。</p>
+    <div class="cols-64" style="margin-top:6px">
+      <div>
+        <div class="h3">目的</div>
+        <ol>
+          <li>顧客のエビデンスで、最初に取り組む問題を 1 つに決める</li>
+          <li>作る前に、価値と使いやすさを安く確かめる</li>
+          <li>決めたことと分からないことを、1 つの文書で開発に渡す</li>
+        </ol>
+      </div>
+      <div class="sm">
+        <div class="h3">扱うこと</div>
+        <p>誰の、どんな問題を、なぜ解くか</p>
+        <div class="h3" style="margin-top:14px">扱わないこと（開発の仕事）</div>
+        <p>アーキテクチャ、モデルの選定、データの設計、運用の準備</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="slide" data-chap="1. AI-DLC Discovery とは">
+  <h2>AI-DLC への引き継ぎ</h2>
+  <div class="body">
+    <p class="sm">AI-DLC: AI 駆動開発ライフサイクル（AI-Driven Development Lifecycle）。AI-DLC Discovery の成果は、AI-DLC に引き継ぎます。</p>
+    <div class="fig"><img src="images/fig-1-1-aidlc-position.svg" alt="AI-DLC と AI-DLC Discovery の関係"></div>
+  </div>
+</section>
+<!-- ===================== 2 章 ===================== -->
+<section class="slide" data-chap="2. 基本的な進め方">
+  <h2>AI が下書きし、チームが決める</h2>
+  <div class="body">
+    <div class="fig"><img src="images/fig-1-2-draft-decide.svg" alt="AI が下書きし、チームが決める"></div>
+    <div class="callout"><p>スコアも決定も、チームが確定するまでは下書き。理由をつけた上書きは、よい結果です。</p></div>
+  </div>
+</section>
+<section class="slide" data-chap="2. 基本的な進め方">
+  <h2>エビデンスラベル</h2>
+  <div class="body">
+    <table>
+      <tr><th>ラベル</th><th>意味</th><th>例</th><th>レビューでの扱い</th></tr>
+      <tr><td>Known<br><span class="note">データで裏付けあり</span></td><td>件数、引用、指標など、データが示している</td><td>「400 件中 102 件が、この問題に触れている」</td><td>何の何件中か。範囲を広げすぎていないか</td></tr>
+      <tr><td>Assumed<br><span class="note">仮定</span></td><td>そう考えているが、データでは示されていない</td><td>根本原因の仮説、チームの経験にもとづく判断</td><td>判断に関わるなら、検証の計画があるか</td></tr>
+      <tr><td>Needs evidence<br><span class="note">要エビデンス</span></td><td>判断に関わるので、検証が必要</td><td>画面にあるが、誰も確認していない機能</td><td>担当者と期限がついているか</td></tr>
+    </table>
+    <p class="sm">レビューの的は <b>Assumed</b> と <b>Needs evidence</b>。プレスリリースだけは、この 2 つにだけラベルがつきます。</p>
+  </div>
+</section>
+<section class="slide" data-chap="2. 基本的な進め方">
+  <h2>進め方の約束</h2>
+  <div class="body">
+    <div class="blocks b3">
+      <div class="block"><h3>おすすめの答えが付く</h3><ul><li>データにもとづくおすすめを出発点にできる</li><li>事実はアシスタントが調べる。聞くのは判断だけ</li><li>まとめて「はい」「はい、ただし Q2 は〜」で答えられる</li><li>予想を聞く質問だけは、おすすめなし</li></ul></div>
+      <div class="block"><h3>分からないことも成果</h3><ul><li>フェーズの終わりに「分かっていること / 分かっていないこと / 仮定していること」を整理</li><li>分からないことは、未検証の仮説として Discovery brief に残す</li></ul></div>
+      <div class="block"><h3>顧客データを丁寧に</h3><ul><li>引用は匿名化される</li><li>生のデータはバージョン管理に入れない</li><li>個人情報はワークショップの前に、自分たちの環境で除く</li></ul></div>
+    </div>
+  </div>
+</section>
+<section class="slide" data-chap="2. 基本的な進め方">
+  <h2>成果物を読むときに</h2>
+  <div class="body">
+    <div class="blocks b3">
+      <div class="block"><h3>英語のまま残る部分</h3><ul><li>テンプレートの見出し</li><li>値の前のラベル（<code>Verdict:</code> など）と表の見出し</li><li>選択肢の値（GREEN など）</li><li>方法論の名前、ラベル、commit / pivot / park</li></ul><p style="margin-top:8px">後のステップと AI-DLC が読むため。本文は日本語。</p></div>
+      <div class="block"><h3>引用とペルソナの言葉</h3><ul><li>引用は、訳、原文、出典が並ぶ</li><li>訳が原文より強く、弱くなっていないか</li><li>ペルソナの言葉、プレスリリースの顧客の声、講評は顧客のエビデンスではなく仮説</li></ul></div>
+      <div class="block"><h3>下書きと決定</h3><ul><li>チームが確定するまでは下書き</li><li>理由、目標値、撤退基準、担当者をアシスタントが書いたら、確定、変更、提案の明記のどれかにする</li><li>開発には「チームが決めたこと」として渡る</li></ul></div>
+    </div>
+  </div>
+</section>
+<section class="slide" data-chap="2. 基本的な進め方">
+  <h2>どの成果物にも共通するレビュー観点</h2>
+  <div class="body">
+    <ul class="rv" style="gap:14px">
+      <li style="font-size:26px">数字が、何の何件中かを示しているか</li>
+      <li style="font-size:26px">1 社、1 か月、1 つの引用の数字を、顧客全体の事実のように書いていないか</li>
+      <li style="font-size:26px">アーキテクチャや技術の選定が書かれていないか（開発が決めること）</li>
+      <li style="font-size:26px">「革新的な」「シームレスな」などの誇張表現や、根拠のない「初の」がないか</li>
+      <li style="font-size:26px">自分たちの顧客と、自分たちのプロダクトについて書かれていると感じられるか</li>
+    </ul>
+  </div>
+</section>
+<!-- ===================== 3 章 ===================== -->
+<section class="slide" data-chap="3. 参加者と役割">
+  <h2>参加者と役割</h2>
+  <div class="body">
+    <p class="sm">4〜6 人が目安。多ければ 4〜5 人のポッドに分かれ、ポッドごとに 1 つのユースケースを担当。AI アシスタントへの入力は、1 人の操作担当者が行います。</p>
+    <table class="t16">
+      <tr><th>役割</th><th>参加</th><th>AI-DLC Discovery での役割</th></tr>
+      <tr><td>プロダクトオーナー</td><td>必須</td><td>ビジネス指標と向きを確かめる。ユースケースと最後の決定に責任を持ち、ロードマップを受け取る</td></tr>
+      <tr><td>エンジニアリングリード</td><td>必須</td><td>実現可能性のスコアを決め、開発の未知の点を挙げる。実現可能性のリスクを判定する</td></tr>
+      <tr><td>デザインの担当者</td><td>必要に応じて</td><td>プロトタイプの試用と講評で、使いやすさを判断する</td></tr>
+      <tr><td>データの担当者</td><td>必要に応じて</td><td>データの一覧と欠落を確かめ、ベースラインを用意する</td></tr>
+      <tr><td>サポート、営業の担当者</td><td>必要に応じて</td><td>ペルソナや顧客の声が実際の顧客に合うかを確かめる。事業性の懸念を挙げる</td></tr>
+      <tr><td>スポンサー</td><td>最初と報告会</td><td>採点の重みを最初に決め、報告会で決定と次のステップを合意する</td></tr>
+      <tr><td>ファシリテーター</td><td>全体</td><td>進行と時間を管理し、考えて決めるのがチーム自身であるようにする</td></tr>
+    </table>
+    <p class="note">役割ごとに見るリスク（Cagan）: 価値と事業性はプロダクトマネージャー、使いやすさはデザイナー、実現可能性はエンジニアリングリード。</p>
+  </div>
+</section>
+<!-- ===================== 4 章 ===================== -->
+<section class="slide" data-chap="4. 持ち込むものと持ち帰るもの">
+  <h2>持ち込むもの</h2>
+  <div class="body">
+    <table class="t17">
+      <tr><th>持ち込むもの</th><th>内容</th><th>事前に考えておくこと</th></tr>
+      <tr><td>顧客データ</td><td>本番データ、Signal Brief（匿名化したシグナルの要約）、合成データセットのいずれか</td><td>どのチャネルのデータがあり、どれが欠けているか</td></tr>
+      <tr><td>テレメトリー（任意）</td><td>ジャーニーのステップごとの日次の集計。生のログやトレースは持ち込まない</td><td>顧客の行動を示すデータがあるか</td></tr>
+      <tr><td>候補のユースケース 3〜5 個</td><td>機能ではなく、問題として書く</td><td>どの顧客のどの問題を解くのか</td></tr>
+      <tr><td>ビジネス指標とベースライン</td><td>動かしたい指標と現在の値。上がるとよいか、下がるとよいか</td><td>どの数字をどれだけ動かしたいのか</td></tr>
+    </table>
+    <div class="blocks b2">
+      <div class="block"><h3>データの扱い</h3><p>組織のルールに従う。個人情報は事前に自分たちの環境で除く（<code>tools/prepare-data</code>）。ワークショップの中でデータを作らない。</p></div>
+      <div class="block"><h3>チームの予想は事前に共有しない</h3><p>分析の前にアシスタントが聞きます。事前に話し合うと、声の大きい人の予想にそろってしまいます。</p></div>
+    </div>
+  </div>
+</section>
+<section class="slide" data-chap="4. 持ち込むものと持ち帰るもの">
+  <h2>候補のユースケースの書き方</h2>
+  <div class="body">
+    <table>
+      <tr><th>項目</th><th>書くこと</th></tr>
+      <tr><td>誰が困っているか</td><td>顧客のセグメントや役割</td></tr>
+      <tr><td>問題</td><td>その人が、どんな場面で、何に困っているか</td></tr>
+      <tr><td>エビデンス</td><td>チームがこの問題があると考える根拠</td></tr>
+      <tr><td>ビジネス指標</td><td>この問題を解くと動く指標</td></tr>
+      <tr><td>担当者</td><td>チームの中で、開発に責任を持つ人</td></tr>
+    </table>
+    <div class="blocks b2">
+      <div class="block" style="border-top-color:#9aa3ad"><h3 style="color:var(--muted)">機能として書いた例</h3><p>発注画面に AI のおすすめを追加する</p></div>
+      <div class="block"><h3>問題として書き直した例</h3><p>小規模店舗のオーナーは、週に一度の発注で何をどれだけ頼めばよいか分からず、在庫切れと余剰在庫を繰り返している</p></div>
+    </div>
+  </div>
+</section>
+<section class="slide" data-chap="4. 持ち込むものと持ち帰るもの">
+  <h2>持ち帰るもの</h2>
+  <div class="body">
+    <table>
+      <tr><th>持ち帰るもの</th><th>内容</th><th>何に使うか</th></tr>
+      <tr><td>選んだユースケースについての決定</td><td>開発に進めるか（commit）、方向転換するか（pivot）、保留するか（park）と、その理由</td><td>次に何をするかを決める</td></tr>
+      <tr><td>プロトタイプ</td><td>操作できる画面の試作。すべてのバージョンが残る</td><td>実際の利用者との会話を始める</td></tr>
+      <tr><td>Discovery brief</td><td>決定、エビデンス、範囲、未検証の仮説をまとめた 1 つの文書</td><td>開発の出発点にする</td></tr>
+      <tr><td>次のステップとロードマップ</td><td>開発の始め方、フォローアップ、Now、Next、Later（今 / 次 / その後）のロードマップ</td><td>ワークショップのあとの行動を決める</td></tr>
+    </table>
+    <div class="callout"><p>「作らない」と決めることも、よい結果。park にしても、エビデンスと学んだことは Discovery brief に残ります。</p></div>
+  </div>
+</section>
+<!-- ===================== 5 章 ===================== -->
+<section class="slide" data-chap="5. 全体の流れ">
+  <h2>全体の流れ</h2>
+  <div class="body">
+    <div class="fig"><img src="images/fig-1-3-overall-flow.svg" alt="AI-DLC Discovery の全体の流れ"></div>
+  </div>
+</section>
+<section class="slide" data-chap="5. 全体の流れ">
+  <h2>5 つのフェーズと問い</h2>
+  <div class="body">
+    <div class="cols" style="grid-template-columns:1.25fr 1fr">
+      <table>
+        <tr><th>フェーズ</th><th>問い</th></tr>
+        <tr><td>Signals<br><span class="note">顧客シグナルの分析</span></td><td>顧客は何を伝えているか</td></tr>
+        <tr><td>Working Backwards<br><span class="note">顧客から逆算する手法</span></td><td>どの問題を、誰のために、最初に解くか。それをどう形にするか</td></tr>
+        <tr><td>Prototype</td><td>それはどんな体験か</td></tr>
+        <tr><td>Validate<br><span class="note">検証</span></td><td>何が失敗の原因になりうるか。成功をどう測るか</td></tr>
+        <tr><td>Handoff<br><span class="note">引き渡し</span></td><td>開発は何から始めるか</td></tr>
+      </table>
+      <div>
+        <div class="h3">流れについて知っておくこと</div>
+        <ul class="sm">
+          <li><b>最初にビジネス指標を決める。</b>すべてのスコアの基準になる</li>
+          <li><b>フェーズの終わりにチェックポイント。</b>確認してから次へ</li>
+          <li><b>前の成果物が次の入力。</b>前を直すと、やり直しが提案される</li>
+          <li><b>成果物はファイルに残る。</b>分けて進めても再開できる</li>
+          <li><b>最後に報告会。</b>担当者と期限を合意する</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="slide" data-chap="5. 全体の流れ">
+  <h2>成果物はフェーズごとのフォルダに</h2>
+  <div class="body">
+    <div class="cols" style="grid-template-columns:1.1fr 1fr">
+<pre class="tree">discovery/
+├── data/        生のデータ（コミットしない）
+└── [project]/
+    ├── PROJECT.md
+    ├── signals/
+    ├── working-backwards/
+    ├── prototype/
+    ├── validate/
+    └── handoff/</pre>
+      <div>
+        <div class="h3"><code>PROJECT.md</code> は起点のファイル</div>
+        <ul class="sm">
+          <li>セットアップで確認したこと: プロダクトと利用者、参加者、ビジネス指標とその向きとベースライン、データ、プロジェクト言語</li>
+          <li>各フェーズの状態</li>
+          <li>別のセッションで再開するときも、ここを読む</li>
+        </ul>
+        <div class="callout" style="margin-top:14px"><p>特に、ビジネス指標と、上がるとよいか下がるとよいかを確かめる</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="slide" data-chap="5. 全体の流れ">
+  <h2>成果物の依存関係</h2>
+  <div class="body">
+    <div class="fig"><img src="images/fig-2-2-artifact-dependencies.svg" alt="成果物の依存関係"></div>
+    <p class="sm">前の成果物を直したら、矢印の先も見直します。例: ペルソナを直したら、採点、PR/FAQ、講評も。</p>
+  </div>
+</section>
+<!-- ===================== 6 章 Signals ===================== -->
+<section class="slide divider" data-theme="signals" data-chap="6. Signals">
+  <div class="num">フェーズ 1</div>
+  <h1>Signals</h1>
+  <div class="q">顧客は何を伝えているか</div>
+  <div class="aim">ねらい: チームの思い込みを記録に残し、それをデータで確かめる</div>
+  <ol class="steps">
+    <li>分析の前に、チームの予想を聞く（任意）</li>
+    <li>データの一覧を確認する</li>
+    <li>分析し、レポートと仮説を書く</li>
+    <li>上位のシグナルと顧客の声を読み、異議を出す</li>
+  </ol>
+</section>
+<section class="slide" data-theme="signals" data-chap="6. Signals">
+  <h2>背景にある考え方</h2>
+  <div class="body">
+    <div class="blocks b2">
+      <div class="block"><h3>先に予想を書く</h3><p>レポートを見たあとでは、何を信じていたかを正直に思い出せない（確証バイアス、アンカリング）。役職の高い人の意見に流される HiPPO（Highest Paid Person's Opinion）を避け、口数の少ない人から聞く。</p></div>
+      <div class="block"><h3>VoC（Voice of the Customer）分析</h3><p>フィードバックを 1 件ずつ読み、感情、カテゴリ、緊急度、根本原因の仮説、引用を取り出して集計する。</p></div>
+      <div class="block"><h3>件数より重さ</h3><p>よく出る話題が、いちばん重要とは限らない。頻度、深刻度、到達範囲の 3 つで問題の大きさを見る。</p></div>
+      <div class="block"><h3>反証できる仮説</h3><p>データが残した問いを「〔誰〕は〔問題〕を抱えている、なぜなら〔原因〕」の形にし、検証の方法をつける。</p></div>
+    </div>
+  </div>
+</section>
+<section class="slide" data-theme="signals" data-chap="6. Signals">
+  <h2>言うこととすること</h2>
+  <div class="body">
+    <p>顧客の発言と、顧客の行動はずれることがあります。テレメトリーがあれば、Say and do 表（顧客の発言とシステムの記録を並べた表）で、テーマごとにどちらに現れたかを分けます。</p>
+    <table>
+      <tr><th>テーマが現れた場所</th><th>意味</th><th>何を疑うか</th></tr>
+      <tr><td>両方に現れる</td><td>顧客も言い、システムにも記録がある</td><td>確かな問題。規模と影響を確かめる</td></tr>
+      <tr><td>フィードバックだけ</td><td>顧客は言うが、システムには見えない</td><td>計測していない場面がないか</td></tr>
+      <tr><td>テレメトリーだけ</td><td>システムには現れるが、顧客は言わない</td><td>静かに離れている顧客がいないか</td></tr>
+    </table>
+  </div>
+</section>
+<section class="slide" data-theme="signals" data-chap="6. Signals">
+  <h2>参加者が考えるべきこと</h2>
+  <div class="body">
+    <ol class="qs">
+      <li>データを見る前に、自分は顧客の何が問題だと思っているか</li>
+      <li>このデータに、誰の声が入っていて、誰の声が入っていないか。知っている欠落はないか</li>
+      <li>最も目立つエラーや声の大きい要望が、そのまま上位になっていないか。「それで何人の顧客が止まったのか」</li>
+      <li>自分の予想が外れたとき、どこまでは正しかったか</li>
+      <li>うまくいっているのはどこか。守るべきものは何か</li>
+    </ol>
+  </div>
+</section>
+<section class="slide" data-theme="signals" data-chap="6. Signals">
+  <h2>予想とデータの照合の例</h2>
+  <div class="body">
+    <table>
+      <tr><th>チームの予想</th><th>データが示したこと</th><th>判定</th></tr>
+      <tr><td>E1. 解約の理由は、主に価格だと予想する</td><td>解約時のコメントで価格に触れたのは 2 割ほど。多くは初期設定で止まったことに触れている</td><td>反証</td></tr>
+      <tr><td>E2. 法人の顧客ほど、レポート機能を求めていると予想する</td><td>法人の問い合わせの上位にレポート機能がある</td><td>支持</td></tr>
+      <tr><td>E3. モバイルの利用者は、通知を嫌っていると予想する</td><td>通知に触れたフィードバックが少なく、判断できない</td><td>未決着</td></tr>
+    </table>
+    <p class="note">表の内容は説明のための架空の例です。</p>
+  </div>
+</section>
+<section class="slide" data-theme="signals" data-chap="6. Signals">
+  <h2>Signals の成果物</h2>
+  <div class="body">
+    <table>
+      <tr><th>成果物</th><th>位置づけと作成目的</th><th>後で読むステップ</th></tr>
+      <tr><td>チームの予想<span class="fn">team-expectations.md</span></td><td>分析前の思い込みを記録し、データと照らし合わせる</td><td>シグナル分析レポート、仮説</td></tr>
+      <tr><td>シグナル分析レポート<span class="fn">signal-summary.md</span></td><td>上位の顧客の問題を、件数と引用つきで示す</td><td>ペルソナ、採点、PR/FAQ、Discovery brief</td></tr>
+      <tr><td>仮説<span class="fn">hypotheses.md</span></td><td>データが残した問いを、検証の計画にする</td><td>Validate、Discovery brief</td></tr>
+    </table>
+    <div class="callout">
+      <div class="h3">チームの予想のレビュー観点</div>
+      <ul class="rv"><li>分析の前に、E1、E2 … の番号でチームの言葉のまま書かれているか</li><li>一つひとつが、データで間違いだと示せる 1 文か</li><li>言った人の言葉が、アシスタントに「改善」されていないか</li></ul>
+    </div>
+  </div>
+</section>
+<section class="slide" data-theme="signals" data-chap="6. Signals">
+  <h2>シグナル分析レポート</h2>
+  <div class="body">
+    <table class="t17">
+      <tr><th>節</th><th>何が書いてあるか</th><th>どこを見るか</th></tr>
+      <tr><td><code>## Summary</code></td><td>いちばん大事な問題とエビデンスを 2〜3 文で</td><td>知っている顧客の姿と食い違わないか</td></tr>
+      <tr><td><code>## Top signals</code></td><td>上位 3〜7 個の問題。頻度、深刻度、到達範囲（合計 30 点）、件数、引用、根本原因の仮説</td><td>順位の根拠が件数だけでないか。根本原因が Assumed か</td></tr>
+      <tr><td><code>## Say and do</code></td><td>テレメトリーがある場合だけ。発言と記録、どちらに現れたか</td><td>テレメトリーだけの問題を見落としていないか</td></tr>
+      <tr><td><code>## What the team expected</code></td><td>予想ごとの、支持、反証、未決着の判定</td><td>判定の理由がデータで説明されているか</td></tr>
+      <tr><td><code>## Customer voices</code></td><td>匿名化した顧客の発言 5 つの全文</td><td>テーマ名ではなく、顧客の言葉として読む</td></tr>
+      <tr><td><code>## Data gaps</code></td><td>カバーしていないチャネル、セグメント、期間</td><td>知っている欠落が載っているか</td></tr>
+    </table>
+    <p class="sm"><b>読む順番:</b> Summary → Top signals の上位 3 つ → What the team expected → Customer voices（全文） → Data gaps</p>
+  </div>
+</section>
+<section class="slide" data-theme="signals" data-chap="6. Signals">
+  <h2>シグナル分析レポートのレビュー観点</h2>
+  <div class="body">
+    <ul class="rv" style="gap:12px">
+      <li style="font-size:24px">すべての主張にエビデンスラベルがあるか</li>
+      <li style="font-size:24px">件数が何の何件中かを示しているか。エビデンスが 1 つのチャネルに偏っていないか。偏っているなら、そう書かれているか</li>
+      <li style="font-size:24px">好意的なテーマ（うまくいっていること）も載っているか</li>
+      <li style="font-size:24px">データの欠落に、自分たちが知っている漏れがないか。挙げた欠落は Discovery brief の未解決の問いになる</li>
+    </ul>
+    <div class="pit"><b>落とし穴:</b> 最も目立つエラーや声の大きい要望が、そのまま上位になっていることがある。よく出る話題と、顧客を止めている問題は同じとは限らない。</div>
+  </div>
+</section>
+<section class="slide" data-theme="signals" data-chap="6. Signals">
+  <h2>仮説</h2>
+  <div class="body">
+    <p class="sm">データが残した問いが、H1、H2 … の番号で 5〜10 個並びます。仮説の文、エビデンス、確信度（HIGH、MEDIUM、LOW）、検証の方法がつきます。</p>
+    <div class="cols" style="grid-template-columns:1.3fr 1fr">
+      <table>
+        <tr><th>項目</th><th>チームの予想（E）</th><th>仮説（H）</th></tr>
+        <tr><td>いつ書くか</td><td>分析の前</td><td>分析のあと</td></tr>
+        <tr><td>誰の言葉か</td><td>チームの言葉のまま</td><td>データから、アシスタントが下書き</td></tr>
+        <tr><td>何がつくか</td><td>支持、反証、未決着の判定</td><td>確信度と検証の方法</td></tr>
+        <tr><td>ファイル</td><td><code>team-expectations.md</code></td><td><code>hypotheses.md</code></td></tr>
+      </table>
+      <div>
+        <div class="h3">仮説のレビュー観点</div>
+        <ul class="rv"><li>反証できる形になっているか</li><li>検証の方法が具体的か（誰に、何を、どう聞くか）</li><li>確信度が、エビデンスの数と強さに見合っているか</li></ul>
+        <p class="note" style="margin-top:12px">データで決着しなかった予想は、E の番号つきで仮説にも載ります。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="slide" data-theme="signals" data-chap="6. Signals">
+  <h2>チェックポイント</h2>
+  <div class="body">
+    <div class="ck-q">何に取り組むかを決める前に、異議はありますか。</div>
+    <div class="ck-label">その前に確かめること</div>
+    <ul class="check">
+      <li>チームの予想は、分析の前に、チームの言葉のまま書かれているか</li>
+      <li>シグナル分析レポートの主張に、すべてエビデンスラベルがあるか</li>
+      <li>顧客の声を、全文で読んだか</li>
+      <li>自分たちが知っているデータの欠落を挙げたか</li>
+      <li>上位のシグナルに、本物の異議を出したか</li>
+    </ul>
+  </div>
+</section>
+<!-- ===================== 7 章 Working Backwards ===================== -->
+<section class="slide divider" data-theme="wb" data-chap="7. Working Backwards">
+  <div class="num">フェーズ 2</div>
+  <h1>Working Backwards</h1>
+  <div class="q">どの問題を、誰のために解き、どう形にするか</div>
+  <div class="aim">前半: 何に取り組むかを決める（ペルソナとユースケースの採点）</div>
+  <ol class="steps">
+    <li>ペルソナを作る</li>
+    <li>候補のユースケースを並べる</li>
+    <li>重みを確定する</li>
+    <li>ゲートと 6 つの評価軸で採点する</li>
+    <li>確定・上書きし、1 つ選ぶ</li>
+  </ol>
+</section>
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards / 前半">
+  <h2>候補が絞られていく流れ</h2>
+  <div class="body">
+    <div class="fig"><img src="images/fig-1-4-scoring-funnel.svg" alt="ユースケースが絞られていく流れ"></div>
+  </div>
+</section>
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards / 前半">
+  <h2>ペルソナと、候補を絞るゲート</h2>
+  <div class="body">
+    <div class="blocks b2">
+      <div class="block"><h3>ペルソナ</h3><ul><li>利用者像を、具体的な 1 人として描く（Alan Cooper）</li><li>顧客データから作る合成ペルソナ。実在の顧客ではない</li><li>いま満足している顧客を 1 人含める（壊さないか確かめるため）</li><li>B2B では購買者とエンドユーザーを分ける。購買者は価値と費用、エンドユーザーは使い勝手を判断する</li></ul></div>
+      <div class="block"><h3>ゲート: ユースケースの候補をふるい分ける</h3><p>採点の前に、次のどれかに当てはまる候補を外します（理由は記録する）。</p><ul><li>顧客のエビデンスがない</li><li>ビジネス指標につながらない</li><li>開発を担当する人がいない</li><li>開発の道筋がない</li><li><b>ペインキラーテストに通らない:</b> 出さなくても顧客が困らない、気づきもしない候補。「痛み止め」のように、なければ顧客が困るものだけを残す</li></ul></div>
+    </div>
+  </div>
+</section>
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards / 前半">
+  <h2>6 つの評価軸と重み</h2>
+  <div class="body">
+    <table class="t17">
+      <tr><th>評価軸</th><th>重み</th><th>何を見るか</th></tr>
+      <tr><td>顧客の痛み<span class="note">（Pain）</span></td><td class="c">25</td><td>頻繁で深刻か。顧客は回避策にお金や手間をかけているか</td></tr>
+      <tr><td>ビジネス成果<span class="note">（Outcome）</span></td><td class="c">25</td><td>セットアップで決めた指標が、決めた向きに動くか</td></tr>
+      <tr><td>到達範囲<span class="note">（Reach）</span></td><td class="c">15</td><td>多くの利用者、または価値の高いセグメントに届くか</td></tr>
+      <tr><td>戦略との適合、または脅威<span class="note">（Fit）</span></td><td class="c">10</td><td>戦略の中心か。競合や「何もしないこと」が顧客を失わせていないか</td></tr>
+      <tr><td>実現可能性<span class="note">（Feas.）</span></td><td class="c">15</td><td>データと基盤がそろっているか。既存のプロダクトの上に作れるか</td></tr>
+      <tr><td>導入の負担<span class="note">（Adopt.）</span></td><td class="c">10</td><td>いまの使い方を大きく変えずに使えるか</td></tr>
+    </table>
+    <div class="blocks b2">
+      <div class="block"><h3>重みは先に固定する</h3><p>スコアを見てから重みを動かすと、推したい候補のための後付けの理屈になる。変えるなら採点の前にスポンサーと決める。</p></div>
+      <div class="block"><h3>1 チームに 1 つの焦点</h3><p>3.5 以上で確信度 High は Build first、Medium か Low は Prototype to learn。2.5〜3.4 は Defer、2.5 未満は Drop。取り組むのは最も高い 1 つ。</p></div>
+    </div>
+  </div>
+</section>
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards / 前半">
+  <h2>参加者が考えるべきこと（前半）</h2>
+  <div class="body">
+    <ol class="qs two sm">
+      <li>このペルソナに会ったことがあるか。自分たちの顧客にいない人物になっていないか</li>
+      <li>いま満足している顧客は、新しい機能で何を失うか</li>
+      <li>自分たちの候補は、機能か、問題か</li>
+      <li>その問題を解くと、決めた指標が決めた向きに動くか。候補が自分で選んだ指標で評価していないか</li>
+      <li>実現可能性は、何があれば 2 点に下がり、何があれば 4 点に上がるか（エンジニアリングリード）</li>
+      <li>自分の推す案が先送りになるとき、スコアが見落としていることは本当にあるか。なければ、声に出して同意する</li>
+    </ol>
+  </div>
+</section>
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards / 前半">
+  <h2>前半の成果物</h2>
+  <div class="body">
+    <table>
+      <tr><th>成果物</th><th>位置づけと作成目的</th><th>後で読むステップ</th></tr>
+      <tr><td>ペルソナ<span class="fn">personas/*.md</span></td><td>顧客を具体的な人として共有する</td><td>採点、PR/FAQ、講評、Discovery brief、AI-DLC</td></tr>
+      <tr><td>ユースケースの採点<span class="fn">use-case-scoring.md</span></td><td>取り組む問題を、エビデンスと理由つきで 1 つに決める</td><td>Validate（再採点）、Discovery brief、ロードマップ</td></tr>
+    </table>
+  </div>
+</section>
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards / 前半">
+  <h2>ペルソナ</h2>
+  <div class="body">
+    <div class="cols" style="grid-template-columns:1fr 1.25fr">
+      <div class="sm">
+        <div class="h3">何が書いてあるか</div>
+        <ul>
+          <li>1 人 1 ファイル。1 行目が名前（brief と AI-DLC もこの名前を使う）</li>
+          <li><code>Tagline:</code>、<code>Confidence:</code>、<code>Based on:</code>（根拠の件数）</li>
+          <li>属性、目標と動機、痛み、行動、利用の状況、引用、典型的な場面、話し方</li>
+          <li>外したペルソナは <code>set-aside-personas.md</code> へ。開発と AI-DLC は読まない</li>
+        </ul>
+      </div>
+      <div>
+        <div class="h3">レビュー観点</div>
+        <ul class="rv">
+          <li>この人に会ったことがあるか。自分たちの顧客にいない人物になっていないか</li>
+          <li>引用が、実際のフィードバックからそのまま取られているか。データにない特徴が足されていないか</li>
+          <li>確信度が根拠の件数に見合っているか（5 件以上 High、2〜4 件 Medium、1 件以下 Low）</li>
+          <li>満足している顧客がいるか。購買者とエンドユーザーが分かれているか</li>
+          <li>重なっていないか。名前、性別、年齢、役割が固定観念で組み合わされていないか</li>
+          <li>背景（国籍や文化）が、データ由来か、仮定（Assumed）かが書かれているか</li>
+        </ul>
+      </div>
+    </div>
+    <div class="pit"><b>落とし穴:</b> 名前だけ違う同じ人物が 2 人いることがある。統合する。</div>
+  </div>
+</section>
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards / 前半">
+  <h2>ユースケースの採点</h2>
+  <div class="body">
+    <p class="sm">冒頭に採点の重みがあり、次の節が続きます。</p>
+    <table class="t17">
+      <tr><th>節</th><th>何が書いてあるか</th><th>どこを見るか</th></tr>
+      <tr><td><code>## Candidates</code></td><td>候補ごとの問題、誰が困っているか、指標、担当者、出どころ</td><td>機能ではなく問題として書かれているか</td></tr>
+      <tr><td><code>## From Signals</code></td><td>Signals から加えた候補と、残すか外すかの理由</td><td>外した理由に納得できるか</td></tr>
+      <tr><td><code>## Gate</code></td><td>候補ごとの通過、不合格と理由</td><td>5 つの基準のどれかを示しているか</td></tr>
+      <tr><td><code>## Scores</code></td><td>6 つの評価軸、加重スコア、確信度、決定</td><td>次のスライドを参照</td></tr>
+      <tr><td><code>## Evidence per score</code></td><td>評価軸ごとのスコアの根拠、引用、ラベル</td><td>意見が分かれそうなスコアの根拠</td></tr>
+      <tr><td><code>## Overrides</code></td><td>チームが上書きしたスコアと理由</td><td>理由が書かれているか</td></tr>
+      <tr><td><code>## Taken forward</code></td><td>取り組むユースケースと決定</td><td>チームが選んだものと一致しているか</td></tr>
+    </table>
+  </div>
+</section>
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards / 前半">
+  <h2>スコア表の読み方</h2>
+  <div class="body">
+    <table class="t17">
+      <tr><th>列</th><th>意味</th><th>どこを見るか</th></tr>
+      <tr><td>Pain、Outcome、Reach、Fit、Feas.、Adopt.</td><td>顧客の痛み、ビジネス成果、到達範囲、戦略との適合または脅威、実現可能性、導入の負担。それぞれ 1〜5 点</td><td>ビジネス成果が決めた指標と向きで判断されているか。適合と実現可能性をチームが確定したか</td></tr>
+      <tr><td>Weighted</td><td>重みをかけた合計（1.0〜5.0）</td><td>3.5、2.5 の境目にある候補</td></tr>
+      <tr><td>Confidence</td><td>エビデンスの強さ（High、Medium、Low）</td><td>独立したシグナルの数に見合っているか</td></tr>
+      <tr><td>Decision</td><td>Build first / Prototype to learn / Defer / Drop</td><td>Build first か Prototype to learn が 1 つだけか</td></tr>
+    </table>
+    <div class="cols" style="grid-template-columns:1.4fr 1fr">
+      <ul class="rv xs">
+        <li>候補が、機能ではなく問題として書かれているか</li>
+        <li>ビジネス成果が、候補自身の指標ではなく、セットアップの指標で判断されているか</li>
+        <li>実現可能性を、エンジニアリングリードが確かめたか</li>
+        <li>上書きに理由があるか。エビデンスのない上書きが Assumed か</li>
+        <li>ゲートで落ちたが残したい候補が、未検証の仮説として記録されているか</li>
+      </ul>
+      <div class="pit" style="align-self:start"><b>落とし穴:</b> すべての候補が 3〜4 点に固まるなら、候補の範囲が広すぎる。もっと具体的な問題に分ける。</div>
+    </div>
+  </div>
+</section>
+<section class="slide divider" data-theme="wb" data-chap="7. Working Backwards">
+  <div class="num">フェーズ 2　後半</div>
+  <h1 style="font-size:46px">PR/FAQ、PRD、GTM、<br>最もリスクの高い前提</h1>
+  <div class="aim" style="font-size:19px;margin-bottom:20px">PR/FAQ: Press Release / Frequently Asked Questions（発売時のプレスリリースと、想定される質問への回答）　PRD: Product Requirements Document（製品要求仕様書）　GTM: go-to-market（市場投入計画）</div>
+  <ol class="steps">
+    <li>5 つの問いに答える</li>
+    <li>機能案を 1 つ選ぶ</li>
+    <li>PR/FAQ</li>
+    <li>準備度チェック</li>
+    <li>PRD</li>
+    <li>GTM の下書き</li>
+    <li>最もリスクの高い前提</li>
+  </ol>
+  <div class="aim" style="margin-top:22px;font-size:20px">進め方は 2 つ: 5 つの問いにチームで答えてから PR/FAQ を書く / アシスタントがたたき台を先に書き、チームが異議を出す</div>
+</section>
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards / 後半">
+  <h2>Working Backwards の流れ</h2>
+  <div class="body">
+    <div class="fig"><img src="images/fig-1-5-working-backwards.svg" alt="Working Backwards の流れ"></div>
+  </div>
+</section>
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards / 後半">
+  <h2>顧客から逆算し、問題を 3 つの文で捉える</h2>
+  <div class="body">
+    <p class="sm"><b>Amazon の Working Backwards:</b> 作る前に、発売日のプレスリリースと FAQ を書く。顧客への価値を発表できるほど明確に説明できないなら、作らない（Colin Bryar、Bill Carr『Working Backwards』）。</p>
+    <table class="t17">
+      <tr><th>文</th><th>型</th><th>確かめること</th></tr>
+      <tr><td>Today statement<br><span class="note">現状の課題文</span></td><td>いま、〔ペルソナ〕は〔場面〕で〔問題〕を抱えている。〔成果〕を得る方法が必要だ</td><td>「方法が必要だ」に、機能や技術ではなく、顧客が得る成果が書かれているか</td></tr>
+      <tr><td>How Might We<br><span class="note">「どうすれば〜できるか」の問い</span></td><td>どうすれば、〔ペルソナ〕のために〔成果〕を実現し、〔便益〕をもたらせるか</td><td>複数の解決策が入る広さで、行動できる狭さか</td></tr>
+      <tr><td>North Star<br><span class="note">目指す到達点</span></td><td>〔いつ〕までに〔能力〕を届け、〔指標 1〕と〔指標 2〕を動かし、〔目指す姿〕を実現する</td><td>製品名ではなく能力か。数字がビジネス指標に結びついているか</td></tr>
+    </table>
+    <p class="note">North Star の数字は、PR/FAQ、PRD、Validate の成功基準でも同じ値を使います。</p>
+  </div>
+</section>
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards / 後半">
+  <h2>7 段落のプレスリリース</h2>
+  <div class="body">
+    <p class="sm">見出し、小見出し、7 つの段落。各段落の役割は 1 つ。顧客を主語にし、誇張表現を使わない。</p>
+    <table class="t17">
+      <tr><th>段落</th><th>役割</th></tr>
+      <tr><td>1. 概要</td><td>いつ、どこで、誰のために、何が出たか。ここで読むのをやめても伝わるように</td></tr>
+      <tr><td>2. 課題</td><td>顧客のいまの状況と、その不便が顧客に何を失わせているか</td></tr>
+      <tr><td>3. 解決策</td><td>プロダクトがどう助けるかを、平易な言葉で</td></tr>
+      <tr><td>4. リーダーの発言</td><td>なぜこれが大切かを、提供する会社のリーダーの言葉で</td></tr>
+      <tr><td>5. 顧客の体験</td><td>きっかけから成果まで、顧客がたどる流れ</td></tr>
+      <tr><td>6. 顧客の声</td><td>ペルソナの言葉で語る感想（合成であることを明記）</td></tr>
+      <tr><td>7. 行動の呼びかけ</td><td>どこから始められるか</td></tr>
+    </table>
+  </div>
+</section>
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards / 後半">
+  <h2>準備度チェック、P0、最もリスクの高い前提、GTM</h2>
+  <div class="body">
+    <div class="blocks b2">
+      <div class="block"><h3>準備度チェック</h3><p>PR/FAQ がプロトタイプに進める状態かを 7 つの問いで確かめる。GREEN（欠落なし）、AMBER（1〜3 個）、RED（4 個以上）。AMBER はよい結果。欠落は未検証の仮説として持ち越す。</p></div>
+      <div class="block"><h3>P0 を小さくする</h3><p>PRD の要求を P0、P1、P2 に分け、P0 はプロトタイプにできる大きさに。作らないものも書く。AI 機能なら、初版のプロンプトと評価用テストケースも作る。</p></div>
+      <div class="block"><h3>最もリスクの高い前提</h3><p>Assumed と Needs evidence の主張から、間違っていたらこの案が成り立たないものを 1 つ選ぶ。『リーン・スタートアップ』の「信じて飛ぶ前提（leap of faith assumptions）」に近い。</p></div>
+      <div class="block"><h3>GTM の下書き</h3><p>ファーストアダプター、ポジショニング（Geoffrey Moore『キャズム』の型）、ビジネスモデルと価格の仮説、ローンチの段階。比較の相手に「何もしない」も含める。</p></div>
+    </div>
+  </div>
+</section>
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards / 後半">
+  <h2>参加者が考えるべきこと（後半）</h2>
+  <div class="body">
+    <ol class="qs two sm">
+      <li>このプロダクトで一日がよくなるのは誰か。チームやスポンサーではなく、顧客か</li>
+      <li>根本原因は「何が起きているか」ではなく「なぜ起きているか」を説明しているか</li>
+      <li>プレスリリースを声に出して読んで、自分たちの言葉か。違和感のある文は、その場で書き直す</li>
+      <li>目標の数字を、自分たちの約束として声に出して言えるか</li>
+      <li>どの前提が間違っていたら、誰も使わないものを作ってしまうか。話し合う前に全員が一斉に選ぶ</li>
+      <li>どんな結果なら止めるか。合格ラインは、結果を見る前に決める</li>
+      <li>開発を止めてしまう未解決の問いに、担当者と期限がついているか</li>
+    </ol>
+  </div>
+</section>
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards / 後半">
+  <h2>後半の成果物</h2>
+  <div class="body">
+    <table>
+      <tr><th>成果物</th><th>位置づけと作成目的</th><th>後で読むステップ</th></tr>
+      <tr><td>Working Backwards 文書<span class="fn">working-backwards.md</span></td><td>5 つの問いの答え。問題の捉え方と目標の数字をそろえる</td><td>PR/FAQ、成功基準</td></tr>
+      <tr><td>機能の説明<span class="fn">feature-description.md</span></td><td>解決策の候補から 1 つを選ぶ中間の文書</td><td>PR/FAQ</td></tr>
+      <tr><td>PR/FAQ<span class="fn">prfaq.md</span></td><td>顧客への価値を、発表できる形で書く。準備度チェックと Prototype scope を含む</td><td>PRD、プロトタイプ、Discovery brief</td></tr>
+      <tr><td>PRD<span class="fn">prd.md</span></td><td>何を作り、何を作らないかを決める</td><td>プロトタイプ、Discovery brief</td></tr>
+      <tr><td>GTM<span class="fn">gtm.md</span></td><td>誰が最初に使い、どう伝えるか。Validate で完成させる</td><td>Validate、Discovery brief</td></tr>
+      <tr><td>最もリスクの高い前提<span class="fn">riskiest-assumption.md</span></td><td>プロトタイプで確かめることを 1 つに絞る</td><td>プロトタイプ、Validate</td></tr>
+    </table>
+  </div>
+</section>
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards / 後半">
+  <h2>Working Backwards 文書</h2>
+  <div class="body">
+    <p class="xs">5 つの問いの答えをまとめた文書です。節は <code>## 1. LISTEN</code> 〜 <code>## 5. TEST &amp; ITERATE</code>。PR/FAQ と Validate の成功基準の土台になります。</p>
+    <table class="t16">
+      <tr><th>問い</th><th>答えること</th><th>レビュー観点</th></tr>
+      <tr><td>1. Listen<br><span class="note">顧客は誰か</span></td><td>主な顧客、顧客についての洞察、痛み</td><td>エンドカスタマー（一日がよくなる人）が名指しされているか。チームやスポンサーではないか。洞察と痛みにエビデンスがあるか</td></tr>
+      <tr><td>2. Define<br><span class="note">顧客の問題は何か</span></td><td>核となる問題、根本原因、顧客への影響とビジネスへの影響、制約。Today statement、How Might We、North Star</td><td>根本原因が、症状ではなく原因（なぜ）を説明しているか。2 つの影響が分かれているか。Today statement に機能や技術（「AI で」「リアルタイムの」）が入っていないか。North Star が能力を書き、数字がビジネス指標に結びついているか</td></tr>
+      <tr><td>3. Invent<br><span class="note">どんな解決策があるか</span></td><td>解決策の概要、中心の機能 3〜5 個、差別化</td><td>解決策が Define の問題を解いているか。差別化が、「何もしない」を含む代替手段と比べて書かれているか。アーキテクチャや技術の選定になっていないか</td></tr>
+      <tr><td>4. Refine<br><span class="note">顧客の体験はどう流れるか</span></td><td>顧客のジャーニー、初めて使う日の体験、その後の使い方</td><td>きっかけから成果まで、顧客の体験が一続きで書かれているか。初めて使う日の体験が具体的か</td></tr>
+      <tr><td>5. Test<br><span class="note">成功をどう測るか</span></td><td>成功指標（数字）、前提の確かめ方、イテレーションの計画、リスク</td><td>指標が数字で、North Star と同じか。前提をどう確かめるかが書かれているか。選んだ範囲で目標に届くか</td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards / 後半">
+  <h2>機能の説明</h2>
+  <div class="body">
+    <div class="cols">
+      <div class="sm">
+        <div class="h3">何が書いてあるか</div>
+        <p>Working Backwards 文書の Invent をもとに、アシスタントが 3〜5 個の機能案を出し、チームが 1 つを選ぶか組み合わせます。選んだ案を短くまとめた文書で、PR/FAQ の入力になります。PRD より短い中間の文書です。</p>
+        <ul style="margin-top:10px">
+          <li>問題、解決策、対象の利用者</li>
+          <li>主な機能と、ペルソナごとのユーザーストーリー</li>
+          <li>成功基準、対象外、前提とリスク</li>
+          <li>Working Backwards 文書とのつながり（Listen、Define、Invent）</li>
+        </ul>
+      </div>
+      <div>
+        <div class="h3">レビュー観点</div>
+        <ul class="rv">
+          <li>チームが、複数の機能案を比べてから選んだか</li>
+          <li>問題の文が、Working Backwards 文書の Define の問題と同じか</li>
+          <li>ユーザーストーリーが、ペルソナの痛みにもとづいているか</li>
+          <li>対象外（この機能がしないこと）が書かれているか</li>
+          <li>成功基準の数字が、North Star と同じか</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards / 後半">
+  <h2>PR/FAQ</h2>
+  <div class="body">
+    <table class="t17">
+      <tr><th>節</th><th>何が書いてあるか</th><th>どこを見るか</th></tr>
+      <tr><td>プレスリリース</td><td>見出し、小見出し、7 つの段落</td><td>声に出して読んで、自分たちの言葉か</td></tr>
+      <tr><td>顧客向け FAQ</td><td>顧客が聞きそうな 5〜7 個の質問と答え</td><td>違和感のある答えがないか</td></tr>
+      <tr><td>社内向け FAQ</td><td>経営、エンジニア、事業部門が聞きそうな 5〜7 個の質問と答え</td><td>開発を縛る答え（範囲、依存、リスク）はどれか</td></tr>
+      <tr><td><code>## Readiness check</code></td><td>準備度チェックの判定（<code>Verdict:</code>）と理由</td><td>判定と欠落の数が合っているか</td></tr>
+      <tr><td><code>## Prototype scope</code></td><td>7 つの問いと答え、体験の全体、プロトタイプで見せる範囲、欠落の表</td><td>欠落（<code>[GAP]</code>）に、埋める問いがあるか</td></tr>
+    </table>
+    <p class="sm"><b>読み方:</b> プレスリリースはチームで声に出して読み、違和感のある文で止まって書き直す。FAQ は、開発を縛る答えに印をつけながら読む。</p>
+  </div>
+</section>
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards / 後半">
+  <h2>準備度チェックの 7 つの問い</h2>
+  <div class="body">
+    <table class="t17">
+      <tr><th>問い</th><th>答えに含まれるべきこと</th></tr>
+      <tr><td>ペルソナ</td><td>主な利用者は誰で、何に責任を持っているか</td></tr>
+      <tr><td>いまの痛み</td><td>いまのやり方の全体、かかる時間、いちばんつらいところ</td></tr>
+      <tr><td>プロトタイプの体験</td><td>将来の体験の全体と、そのうちプロトタイプで見せる範囲</td></tr>
+      <tr><td>ビジョン</td><td>何が自動になり、何が人に残るか。どれくらい速くあるべきか</td></tr>
+      <tr><td>画面と知らせ</td><td>必要な画面、ひと目で見えるべきこと、いつ行動すべきかの知らせ方</td></tr>
+      <tr><td>データ</td><td>必要なデータ、置き場所、鮮度、主なビジネス上のもの。アーキテクチャは書かない</td></tr>
+      <tr><td>プロトタイプで測ること</td><td>何を測り、成功指標と最もリスクの高い前提にどうつながるか</td></tr>
+    </table>
+    <p class="sm">答えは 3〜5 文で下書きされ、足りないところに <code>[GAP]</code>。欠落 0 個で GREEN、1〜3 個で AMBER、4 個以上で RED。</p>
+  </div>
+</section>
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards / 後半">
+  <h2>PR/FAQ のレビュー観点</h2>
+  <div class="body">
+    <ul class="rv" style="gap:9px">
+      <li>顧客が主語になっているか（「〔会社〕が〜を発表」ではなく「〔顧客〕は〜できるようになる」）</li>
+      <li>7 つの段落が、それぞれ 1 つの役割だけを担っているか。プレスリリースの中に見出しがないか</li>
+      <li>顧客の声が、合成のペルソナのものだと明記されているか</li>
+      <li>目標の数字が、North Star と一致しているか。違うなら理由があるか</li>
+      <li>FAQ のすべての主張にエビデンスラベルがあるか</li>
+      <li>準備度チェックの欠落に、埋める問いと担当者があるか。AMBER はよい結果。RED なら PR/FAQ を直す</li>
+      <li>Prototype scope の範囲が、最もリスクの高い前提を確かめられる範囲か</li>
+    </ul>
+    <div class="pit"><b>落とし穴:</b> 技術の説明になっていたら、最初の段落を顧客の側から書き直す。スキルの長さの目安（英語で 500〜700 語）は日本語には当てはまらない。段落の役割と、1 ページに収まるかで確かめる。</div>
+  </div>
+</section>
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards / 後半">
+  <h2>PRD（Product Requirements Document。製品要求仕様書）</h2>
+  <div class="body">
+    <div class="cols">
+      <div class="sm">
+        <div class="h3">何が書いてあるか</div>
+        <p>概要、問題、目標と指標、ペルソナ、要求（P0、P1、P2 と非機能要求）、ユーザーストーリーと受け入れ条件、対象外、依存とリスク、時期の考慮事項。</p>
+        <div class="h3" style="margin-top:12px">AI 機能の場合</div>
+        <ul>
+          <li><b>AI 機能のチェックリスト:</b> ガードレール、評価、プライバシー、提供のコスト</li>
+          <li><b>AI feature block（AI 機能の初版プロンプトと評価用テストケース）:</b> 初版のプロンプト、5〜10 個のテストケース（よくある / 難しいが応じる / 応じてはいけない）、サンプル出力</li>
+        </ul>
+      </div>
+      <div>
+        <div class="h3">レビュー観点</div>
+        <ul class="rv">
+          <li>P0 が、プロトタイプにできる大きさか</li>
+          <li>対象外（作らないもの）が明記されているか</li>
+          <li>アーキテクチャや技術の選定が書かれていないか</li>
+          <li>目標の数字が North Star と同じか</li>
+          <li>AI 機能: ガードレールが具体的か。テストケースが実際の苦情やペルソナから作られているか。プロンプトとサンプル出力が Assumed か</li>
+        </ul>
+        <div class="pit" style="margin-top:12px"><b>落とし穴:</b> 範囲が膨らむ。P0 から P1 に移せるものを探す。</div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards / 後半">
+  <h2>市場投入計画（GTM、go-to-market）の 7 つのパート</h2>
+  <div class="body">
+    <table class="t15">
+      <tr><th>パート</th><th>作るフェーズ</th><th>何が書いてあるか</th></tr>
+      <tr><td>1. ファーストアダプター（必須）</td><td>Working Backwards</td><td>最初に使い始める層、その規模、届け方、2〜3 のデザインパートナー</td></tr>
+      <tr><td>2. ポジショニング（必須）</td><td>Working Backwards</td><td>「〔セグメント〕のうち〔問題〕を抱える人にとって、〔プロダクト〕は〔便益〕をもたらす〔カテゴリ〕。〔代替手段〕と違い、〔差別化〕」</td></tr>
+      <tr><td>3. ビジネスモデルと価格（仮説）</td><td>Working Backwards</td><td>継続利用、追加販売、新製品のどれにつながるか。価格の仮説。AI 機能なら提供コスト</td></tr>
+      <tr><td>4. 事業性の確認（必須）</td><td>Validate</td><td>法務、プライバシーとセキュリティ、営業、サポート、マーケティングの懸念と担当</td></tr>
+      <tr><td>5. ローンチ計画（仮説）</td><td>Working Backwards</td><td>社内利用、デザインパートナー、限定公開、一般公開と、次に進む条件</td></tr>
+      <tr><td>6. 導入と成功（必須）</td><td>Validate</td><td>導入の担当者と指標、先行指標、ビジネス指標、30、60、90 日後の目標、撤退基準</td></tr>
+      <tr><td>7. リスクと未検証の仮説</td><td>Validate</td><td>Validate で確かめられなかった GTM の前提</td></tr>
+    </table>
+    <div class="callout"><div class="h3">下書きのレビュー観点</div><ul class="rv xs"><li>ポジショニングがプレスリリースと一致し、比較の相手に「何もしない」が含まれているか</li><li>デザインパートナーが、実際に声をかけられる相手か（役割で書く）</li><li>価格が、決定ではなく仮説として書かれているか</li></ul></div>
+  </div>
+</section>
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards / 後半">
+  <h2>最もリスクの高い前提</h2>
+  <div class="body">
+    <div class="cols">
+      <div>
+        <div class="h3">4 つの項目だけの短い文書</div>
+        <ul class="sm">
+          <li><code>Assumption:</code> 前提を 1 文で</li>
+          <li><code>Why it is the riskiest:</code> 間違っていたら、この案がどうなるか</li>
+          <li><code>What the prototype must show:</code> プロトタイプのどの場面で確かめるか</li>
+          <li><code>How we will judge it in Validate:</code> 何が支持になり、何が反証になるか</li>
+        </ul>
+      </div>
+      <div>
+        <div class="h3">レビュー観点</div>
+        <ul class="rv" style="gap:10px">
+          <li style="font-size:22px">1 つに絞られているか</li>
+          <li style="font-size:22px">間違っていたら、この案が成り立たない前提か。単なる不安や小さな改善点ではないか</li>
+          <li style="font-size:22px">PR/FAQ と PRD の Assumed、Needs evidence の主張から選ばれているか</li>
+          <li style="font-size:22px">合格ラインが、結果を見る前に決まっているか</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="slide" data-theme="wb" data-chap="7. Working Backwards">
+  <h2>チェックポイント</h2>
+  <div class="body">
+    <div class="ck-q">プロトタイプで何を証明する必要がありますか。</div>
+    <div class="ck-label">その前に確かめること</div>
+    <ul class="check sm" style="grid-template-columns:1fr 1fr;gap:10px 28px">
+      <li>ペルソナは自分たちの顧客にいる人物か。満足している顧客が含まれているか</li>
+      <li>候補は、機能ではなく問題として書かれているか</li>
+      <li>すべてのスコアを、確定または理由つきで上書きしたか</li>
+      <li>ビジネス成果は、決めた指標とその向きで判断されているか</li>
+      <li>プレスリリースを声に出して読み、自分たちの言葉に書き直したか</li>
+      <li>目標の数字は、North Star と一致しているか</li>
+      <li>P0 は、プロトタイプにできる大きさか</li>
+      <li>最もリスクの高い前提は 1 つで、合格ラインが結果を見る前に決まっているか</li>
+    </ul>
+  </div>
+</section>
+<!-- ===================== 8 章 Prototype ===================== -->
+<section class="slide divider" data-theme="proto" data-chap="8. Prototype">
+  <div class="num">フェーズ 3</div>
+  <h1>Prototype</h1>
+  <div class="q">それはどんな体験か</div>
+  <div class="aim">ねらい: 操作できるプロトタイプを作り、講評を受け、少なくとも一度変える</div>
+  <ol class="steps">
+    <li>4〜8 画面の構成案。test moment に印</li>
+    <li>1 つの HTML で作る</li>
+    <li>チームが試用する</li>
+    <li>ペルソナが講評する</li>
+    <li>直すものを選び、新しいバージョンへ</li>
+  </ol>
+</section>
+<section class="slide" data-theme="proto" data-chap="8. Prototype">
+  <h2>プロトタイプのイテレーション</h2>
+  <div class="body">
+    <div class="fig"><img src="images/fig-1-6-prototype-iteration.svg" alt="プロトタイプのイテレーション"></div>
+    <div class="blocks b3">
+      <div class="block"><h3>学ぶためのプロトタイプ</h3><p>最もリスクの高い前提を確かめる最小の流れ。会話を始められたら止める。</p></div>
+      <div class="block"><h3>ペルソナの立場でたどる</h3><p>迷う場所、止まる場所を探す（認知的ウォークスルーに近い）。</p></div>
+      <div class="block"><h3>講評は仮説</h3><p>ペルソナは合成。実際の利用者での検証は、ワークショップのあとに。</p></div>
+    </div>
+  </div>
+</section>
+<section class="slide" data-theme="proto" data-chap="8. Prototype">
+  <h2>参加者が考えるべきこと</h2>
+  <div class="body">
+    <ol class="qs">
+      <li>test moment（前提を検証する場面）で、最もリスクの高い前提が本当に見えるか</li>
+      <li>主なペルソナなら、どこで迷い、どこであきらめるか</li>
+      <li>画面が示していることのうち、誰も確認していないことはどれか。画面上の表現は約束に見える。分からなければ Needs evidence に</li>
+      <li>アシスタントが、チームの合意から変えたところはないか。このままにするか、戻すか</li>
+      <li>どの指摘を直すか。最もリスクの高い前提に関わるものから。色やデザインの細部に時間を使わない</li>
+    </ol>
+  </div>
+</section>
+<section class="slide" data-theme="proto" data-chap="8. Prototype">
+  <h2>Prototype の成果物</h2>
+  <div class="body">
+    <table>
+      <tr><th>成果物</th><th>位置づけと作成目的</th><th>後で読むステップ</th></tr>
+      <tr><td>プロトタイプ<span class="fn">v1.html、v2.html、…、index.html</span></td><td>議論のための具体物。すべてのバージョンを残し、<code>index.html</code> は現在または選んだバージョン</td><td>講評、Validate、報告会</td></tr>
+      <tr><td>バージョンの記録<span class="fn">versions.md</span></td><td>何を、なぜ、誰の求めで変えたかを残す</td><td>Validate、Discovery brief</td></tr>
+      <tr><td>比較ページ<span class="fn">compare.html</span></td><td>バージョンを並べて比べる</td><td>Validate（引き渡すバージョンを選ぶ）</td></tr>
+      <tr><td>メモ<span class="fn">notes.md</span></td><td>画面、主な流れ、test moment をまとめる</td><td>Discovery brief の画面と流れの節</td></tr>
+      <tr><td>ペルソナによる講評<span class="fn">persona-critique.md</span></td><td>価値と使いやすさのリスクの主なエビデンス</td><td>イテレーション、Validate</td></tr>
+    </table>
+  </div>
+</section>
+<section class="slide" data-theme="proto" data-chap="8. Prototype">
+  <h2>プロトタイプの 3 つのビュー</h2>
+  <div class="body">
+    <table class="t17">
+      <tr><th>ビュー</th><th>何が見えるか</th><th>いつ使うか</th></tr>
+      <tr><td>Flow</td><td>すべての画面をスマートフォンの枠で横に並べたボード</td><td>全体を最初に見渡すとき、報告会で見せるとき</td></tr>
+      <tr><td>Mobile</td><td>スマートフォンの画面で、1 画面ずつ操作できる</td><td>主なペルソナがスマートフォンで使う場合の試用</td></tr>
+      <tr><td>Desktop</td><td>ブラウザーの幅に合わせた画面</td><td>主なペルソナがパソコンで使う場合の試用</td></tr>
+    </table>
+    <p class="xs">「Show test moment」で test moment の要素が点線で囲まれる。<code>versions.md</code> の <code>Chosen for the handoff:</code> に引き渡すバージョン。</p>
+    <div class="cols" style="grid-template-columns:1.5fr 1fr">
+      <ul class="rv xs">
+        <li>P0 の要求が、すべてどこかの画面にあるか</li>
+        <li>test moment が前提を見せているか。最初から 2 回ほどの操作で届くか</li>
+        <li>仮の文字ではなく、自分たちの顧客に近い内容か。失敗の状態が 1 つ以上あるか</li>
+        <li>誰も確認していない機能が Needs evidence として記録されているか</li>
+        <li>チームの合意から変えたところがないか</li>
+        <li><code>versions.md</code> の各変更に、理由と依頼者があるか</li>
+      </ul>
+      <div class="pit" style="align-self:start"><b>落とし穴:</b> 完成品に見えても、何も確かめていないことがある。test moment に戻る。</div>
+    </div>
+  </div>
+</section>
+<section class="slide" data-theme="proto" data-chap="8. Prototype">
+  <h2>ペルソナによる講評</h2>
+  <div class="body">
+    <p class="sm">ペルソナごとに、画面ごとの操作の様子、解決した痛みと残った痛み、仕事の流れに合うか、乗り換える条件と妨げ、最もリスクの高い前提への見方、初日に使う見込み（1〜10）。満足しているペルソナは、失うものも答える。</p>
+    <div class="cols" style="grid-template-columns:1fr 1.1fr">
+      <div>
+        <div class="h3"><code>## What the critique shows</code> の列</div>
+        <table class="t17">
+          <tr><th>列</th><th>意味</th></tr>
+          <tr><td>Finding</td><td>見つかったこと（止まった画面、残った痛み）</td></tr>
+          <tr><td>Personas</td><td>その指摘をしたペルソナ</td></tr>
+          <tr><td>Points to risk</td><td>示すリスク（価値か、使いやすさか）</td></tr>
+          <tr><td>Fix in the iteration?</td><td>直すか。直さないなら理由</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="h3">レビュー観点</div>
+        <ul class="rv xs">
+          <li>問題が 1 つも出ていない講評になっていないか</li>
+          <li>反応が、そのペルソナの引用や痛みにもとづいているか（なければ Assumed）</li>
+          <li>直したもの、直さなかったものと、その理由があるか</li>
+          <li>合成のペルソナであり、実際の利用者での検証が必要だと書かれているか</li>
+        </ul>
+        <div class="pit" style="margin-top:10px"><b>落とし穴:</b> 機能の要望のリストになったら、痛みと仕事の流れに戻す。</div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="slide" data-theme="proto" data-chap="8. Prototype">
+  <h2>チェックポイント</h2>
+  <div class="body">
+    <div class="ck-q">ペルソナが言ったことと、私たちが変えたことはこれです。<br>この案が失敗する理由を探す準備はできましたか。</div>
+    <div class="ck-label">その前に確かめること</div>
+    <ul class="check">
+      <li>test moment が、最もリスクの高い前提を見せているか</li>
+      <li>誰も確認していない機能が、Needs evidence として記録されているか</li>
+      <li>講評に、問題が出ているか</li>
+      <li>少なくとも 1 回、新しいバージョンを作り、変えた理由を記録したか</li>
+    </ul>
+  </div>
+</section>
+<!-- ===================== 9 章 Validate ===================== -->
+<section class="slide divider" data-theme="validate" data-chap="9. Validate">
+  <div class="num">フェーズ 4</div>
+  <h1>Validate</h1>
+  <div class="q">失敗するとしたら、なぜか</div>
+  <div class="aim">ねらい: 失敗することを証明しようとしてから決める。使うのは手元のデータ、ペルソナ、プロトタイプだけ。アンケートは待たない</div>
+  <ol class="steps">
+    <li>ペルソナで再確認</li>
+    <li>4 つのリスク</li>
+    <li>プレモーテム</li>
+    <li>成功基準</li>
+    <li>問題の優先順位</li>
+    <li>GTM の完成（必要なら再採点）</li>
+    <li>バージョンを選び、決定</li>
+  </ol>
+</section>
+<section class="slide" data-theme="validate" data-chap="9. Validate">
+  <h2>4 つのリスク</h2>
+  <div class="body">
+    <p class="sm">Marty Cagan が整理したプロダクトの 4 つのリスク（SVPG「The Four Big Risks」）を、次のエビデンスで判定します。</p>
+    <table>
+      <tr><th>リスク</th><th>問い</th><th>主なエビデンス</th></tr>
+      <tr><td>価値</td><td>顧客は、いまのやり方を変えるほど、これを求めるか</td><td>ペルソナによる講評、Signals の頻度と深刻度</td></tr>
+      <tr><td>使いやすさ</td><td>各ペルソナが、助けなしで主な流れを終えられるか</td><td>講評と、改善後のバージョンの再確認</td></tr>
+      <tr><td>実現可能性</td><td>チームのデータ、プロダクト、基盤で作る道筋があるか</td><td>エンジニアリングリード、PRD の依存関係。アーキテクチャではなく未知の点</td></tr>
+      <tr><td>事業性</td><td>ビジネスとして成り立つか</td><td>GTM の事業性の確認（法務、プライバシー、営業、サポート、マーケティング）</td></tr>
+    </table>
+  </div>
+</section>
+<section class="slide" data-theme="validate" data-chap="9. Validate">
+  <h2>プレモーテム</h2>
+  <div class="body">
+    <p class="sm">計画が失敗したと仮定して、その原因を先に挙げる手法（Gary Klein、HBR 2007）。「すでに失敗した」と仮定すると、懸念を口にしやすくなる。</p>
+    <div class="fig"><img src="images/fig-1-8-pre-mortem.svg" alt="プレモーテムの考え方"></div>
+    <div class="callout"><p style="font-size:20px"><b>成功基準:</b> 何を測るか、ベースライン、目標、いつ確かめるか（30、60、90 日後）。<b>撤退基準:</b> 「いつまでに、どの数字に届かなければやめる」の形に（Annie Duke『Quit』）。</p></div>
+  </div>
+</section>
+<section class="slide" data-theme="validate" data-chap="9. Validate">
+  <h2>commit、pivot、park</h2>
+  <div class="body">
+    <div class="fig"><img src="images/fig-1-9-decision.svg" alt="commit、pivot、park の判断"></div>
+    <p class="note">Lean Startup の「方向転換か、継続か」に近い判断。最もリスクの高い前提が開いていれば、いま作るか、先に検証するかも選ぶ。</p>
+  </div>
+</section>
+<section class="slide" data-theme="validate" data-chap="9. Validate">
+  <h2>参加者が考えるべきこと</h2>
+  <div class="body">
+    <ol class="qs two sm">
+      <li>リリースの 90 日後にこれが失敗したとしたら、理由は何か。ほかの人が話す前に、自分の理由を書いたか</li>
+      <li>すべてのリスクが「支持」になっていないか。満足しているペルソナが失うものは何か</li>
+      <li>自分の役割が責任を持つリスクを、自分の言葉で判定できるか</li>
+      <li>成功基準に、何を測るか、閾値、誰が、いつがそろっているか。決めた目標と矛盾しないか。見栄えだけの指標ではないか</li>
+      <li>最もリスクの高い前提が開いているなら、いま作るのか、先に検証するのか。何がどうなれば進めるのか</li>
+      <li>アシスタントが代わりに書いたもの（理由、中間目標、撤退基準、担当者）を、自分たちの決定として渡してよいか</li>
+    </ol>
+  </div>
+</section>
+<section class="slide" data-theme="validate" data-chap="9. Validate">
+  <h2>Validate の成果物</h2>
+  <div class="body">
+    <table class="t17">
+      <tr><th>成果物</th><th>位置づけと作成目的</th><th>後で読むステップ</th></tr>
+      <tr><td>リスクレビュー<span class="fn">validate/risk-review.md</span></td><td>4 つのリスク、プレモーテム、成功基準をまとめ、決定の根拠にする</td><td>決定、Discovery brief</td></tr>
+      <tr><td>問題の優先順位<span class="fn">validate/prioritization.md</span></td><td>顧客の問題のバックログと、未検証の仮説を残す</td><td>Discovery brief</td></tr>
+      <tr><td>決定<span class="fn">validate/decision.md</span></td><td>commit（進める）、pivot（方向転換する）、park（保留する）と、理由と条件を残す</td><td>Discovery brief、次のステップ</td></tr>
+      <tr><td>GTM（完成）<span class="fn">working-backwards/gtm.md</span></td><td>事業性の確認と、導入と成功の表を加える</td><td>Discovery brief</td></tr>
+      <tr><td>ユースケースの採点（再採点）<span class="fn">working-backwards/use-case-scoring.md</span></td><td>Validate で分かったことで、スコアを見直す（必要な場合）</td><td>Discovery brief、ロードマップ</td></tr>
+    </table>
+  </div>
+</section>
+<section class="slide" data-theme="validate" data-chap="9. Validate">
+  <h2>リスクレビュー</h2>
+  <div class="body">
+    <table>
+      <tr><th>節</th><th>何が書いてあるか</th></tr>
+      <tr><td><code>## Four risks</code></td><td>価値、使いやすさ、実現可能性、事業性の 4 つのリスクの表</td></tr>
+      <tr><td><code>## Riskiest assumption</code></td><td>最もリスクの高い前提が、test moment で支持されたか、反証されたか、開いたままか</td></tr>
+      <tr><td><code>## Pre-mortem</code></td><td>プレモーテムで挙げた 5 つの理由と、早期の兆候、今できる予防策</td></tr>
+      <tr><td><code>## Success criteria</code></td><td>3〜5 個の成功基準。指標、ベースライン、目標、確認の時期</td></tr>
+      <tr><td><code>## Open hypotheses</code></td><td>判定が開いたままの前提。開発への問いとして書く</td></tr>
+    </table>
+  </div>
+</section>
+<section class="slide" data-theme="validate" data-chap="9. Validate">
+  <h2>4 つのリスクの表の読み方</h2>
+  <div class="body" style="gap:10px">
+    <div class="cols" style="grid-template-columns:0.95fr 1.4fr;gap:24px">
+    <table class="t15">
+      <tr><th>リスク</th><th>問い</th></tr>
+      <tr><td>価値</td><td>顧客は、いまのやり方を変えるほど、これを求めるか</td></tr>
+      <tr><td>使いやすさ</td><td>各ペルソナが、助けなしで主な流れを終えられるか</td></tr>
+      <tr><td>実現可能性</td><td>チームのデータ、プロダクト、基盤で作る道筋があるか</td></tr>
+      <tr><td>事業性</td><td>ビジネスとして成り立つか</td></tr>
+    </table>
+    <table class="t15">
+      <tr><th>列</th><th>意味</th><th>どこを見るか</th></tr>
+      <tr><td>Risk</td><td>4 つのリスクのどれか</td><td></td></tr>
+      <tr><td>Assumption</td><td>そのリスクについて置いている前提</td><td>前提が具体的か</td></tr>
+      <tr><td>Evidence for / against</td><td>前提を支持するエビデンスと、反するエビデンス</td><td>反するエビデンスが空になっていないか</td></tr>
+      <tr><td>Verdict</td><td>支持、反証、開いたまま</td><td>エビデンスがないのに支持になっていないか</td></tr>
+      <tr><td>Test to settle it</td><td>決着させるための検証</td><td>開いたままのリスクに、検証の方法があるか</td></tr>
+    </table>
+    </div>
+    <div class="h3">リスクレビューのレビュー観点</div>
+    <ul class="rv xxs" style="grid-template-columns:1fr 1fr;column-gap:24px;gap:4px 24px">
+      <li>すべて「支持」になっていないか。満足しているペルソナが失うものと照らす</li>
+      <li>実現可能性に、アーキテクチャではなく未知の点が書かれているか</li>
+      <li>プレモーテムにチームの理由があり、各理由に兆候と予防策があるか</li>
+      <li>成功基準に、指標、ベースライン、目標、時期がそろっているか</li>
+      <li>成功基準が North Star や GTM と矛盾しないか。違う数字なら理由があるか</li>
+      <li>ビジネス指標にも導入にもつながらない、見栄えだけの指標ではないか</li>
+      <li>AI 機能なら、成功基準の 1 つが評価用テストケースで測る AI 品質目標か</li>
+    </ul>
+  </div>
+</section>
+<section class="slide" data-theme="validate" data-chap="9. Validate">
+  <h2>目標の数字がそろっているか</h2>
+  <div class="body">
+    <p class="sm">成果物のあいだで、目標の数字がそろっているかを見比べます。</p>
+    <table>
+      <tr><th>成果物</th><th>数字が現れる場所</th></tr>
+      <tr><td>Working Backwards 文書</td><td>Define の North Star、Test の成功指標</td></tr>
+      <tr><td>PR/FAQ</td><td>プレスリリースと FAQ の目標</td></tr>
+      <tr><td>PRD</td><td>目標と指標</td></tr>
+      <tr><td>リスクレビュー</td><td><code>## Success criteria</code></td></tr>
+      <tr><td>GTM</td><td>6. 導入と成功の目標と撤退基準</td></tr>
+    </table>
+  </div>
+</section>
+<section class="slide" data-theme="validate" data-chap="9. Validate">
+  <h2>問題の優先順位、GTM の完成、再採点</h2>
+  <div class="body">
+    <div class="blocks b3">
+      <div class="block"><h3>問題の優先順位</h3><p>Signals の顧客の問題を、頻度、深刻度、到達範囲（合計 30 点）で並べたバックログ。傾向と手間の目安も。最後に開いたままの仮説。</p><p style="margin-top:6px"><b>採点との違い:</b> 採点は今回取り組む 1 つを選ぶもの。こちらは次のサイクルの材料。</p><ul class="rv xs" style="margin-top:8px"><li>スコアがエビデンスにもとづき、足りないものは LOW か</li><li>開いた仮説が、最もリスクの高い前提も含めてすべて載っているか</li></ul></div>
+      <div class="block"><h3>GTM の完成</h3><p>事業性の確認、導入と成功の表、未検証の仮説を加え、7 つのパートの状態を validated か open に。</p><ul class="rv xs" style="margin-top:8px"><li>事業性がすべて「懸念なし」でないか</li><li>導入の担当者がプロダクトエンジニアリングチームの役割か</li><li>撤退基準が「いつまでに、どの数字」か</li><li>ベースラインがなければ、7 日後までに誰が用意するか</li><li>draft のまま残ったパートがないか</li></ul></div>
+      <div class="block"><h3>再採点</h3><p>講評やリスクレビューで新しく分かったことで、スコアの変更を提案。例: 使いやすさの問題で導入の負担が下がる。<code>## Overrides</code> に「after Validate」と記録。</p><ul class="rv xs" style="margin-top:8px"><li>変更ごとに、理由とチームの確認があるか</li></ul></div>
+    </div>
+  </div>
+</section>
+<section class="slide" data-theme="validate" data-chap="9. Validate">
+  <h2>決定</h2>
+  <div class="body">
+    <div class="cols" style="grid-template-columns:1fr 1fr">
+      <div>
+        <div class="h3">7 つの項目</div>
+        <ul class="xs">
+          <li><code>Decision:</code> commit、pivot、park のどれか</li>
+          <li><code>Reason:</code> 理由を 2〜3 文で</li>
+          <li><code>Evidence:</code> 支持、反証、開いたまま</li>
+          <li><code>Conditions before the build:</code> 前提が開いたまま commit する場合の条件（何が、誰が、いつまでに）</li>
+          <li><code>Next:</code> 次に起きること。pivot なら何を変えるか、park なら再開の条件</li>
+          <li><code>Prototype handed off:</code> 引き渡すバージョン</li>
+          <li><code>Decided by:</code> 決めた人の役割と日付</li>
+        </ul>
+      </div>
+      <div>
+        <div class="h3">Discovery brief との対応</div>
+        <table class="t17">
+          <tr><th>決定の項目</th><th>Discovery brief の節</th></tr>
+          <tr><td>Decision、Reason、Conditions、Next</td><td>2. Decision</td></tr>
+          <tr><td>Evidence（開いたまま）</td><td>14. Open hypotheses and assumptions</td></tr>
+          <tr><td>Prototype handed off</td><td>11. Prototype screens and user flows</td></tr>
+        </table>
+        <div class="h3" style="margin-top:12px">レビュー観点</div>
+        <ul class="rv xs">
+          <li>理由がリスクレビューのエビデンスに結びついているか</li>
+          <li>前提が開いたままなら、いま作るか先に検証するかが決まり、条件が具体的か</li>
+          <li>park なら、再開する条件が書かれているか</li>
+          <li>決めた人が、チームの役割で書かれているか</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="slide" data-theme="validate" data-chap="9. Validate">
+  <h2>チェックポイント</h2>
+  <div class="body">
+    <div class="ck-q">commit、pivot、park のどれにしますか。理由は何ですか。</div>
+    <div class="ck-label">その前に確かめること</div>
+    <ul class="check sm">
+      <li>すべてのリスクが「支持」になっていないか</li>
+      <li>プレモーテムの各理由に、早期の兆候と予防策があるか</li>
+      <li>成功基準に、指標、ベースライン、目標、確認の時期がそろっているか</li>
+      <li>撤退基準は、「いつまでに、どの数字」の形になっているか</li>
+      <li>決定の理由がエビデンスに結びついているか。開発前の条件が具体的か</li>
+      <li>アシスタントが代わりに書いたものを、確定、変更、提案の明記のどれかにしたか</li>
+    </ul>
+  </div>
+</section>
+<!-- ===================== 10 章 Handoff ===================== -->
+<section class="slide divider" data-theme="handoff" data-chap="10. Handoff">
+  <div class="num">フェーズ 5</div>
+  <h1>Handoff</h1>
+  <div class="q">開発は何から始めるか</div>
+  <div class="aim">ねらい: 決めたこととその根拠、まだ分からないことを、開発に渡せる形にする</div>
+  <ol class="steps">
+    <li>必要な成果物がそろっているか確かめる</li>
+    <li>開発の進め方を確かめる</li>
+    <li>Discovery brief を書く</li>
+    <li>次のステップとロードマップを書く</li>
+  </ol>
+</section>
+<section class="slide" data-theme="handoff" data-chap="10. Handoff">
+  <h2>1 つの文書で渡し、条件で並べる</h2>
+  <div class="body">
+    <p class="sm"><b>1 つの文書で渡す:</b> Discovery brief は、参加していない人や AI-DLC が読んで作業を始められる文書。15 の節を要約で書き、詳細は成果物へのリンクで示す。アーキテクチャは書かない。</p>
+    <p class="sm"><b>Now、Next、Later:</b> 日付ではなく条件で並べるロードマップ（Janna Bastow が広めた形式）。各項目は顧客の問題と、それが動かす指標で書く。新しいアイデアは足さない。</p>
+    <table>
+      <tr><th>区分</th><th>何が入るか</th><th>各項目に書くこと</th></tr>
+      <tr><td>Now（今）</td><td>今回取り組むユースケース</td><td>開発前の条件と、成功基準</td></tr>
+      <tr><td>Next（次）</td><td>先送りした候補</td><td>順位を上げるエビデンス、それを集める人、どのフォローアップまでか</td></tr>
+      <tr><td>Later（その後）</td><td>それ以外の候補</td><td>後に回す理由。ゲートで落ちた候補を戻しうる仮説</td></tr>
+    </table>
+  </div>
+</section>
+<section class="slide" data-theme="handoff" data-chap="10. Handoff">
+  <h2>参加者が考えるべきこと</h2>
+  <div class="body">
+    <ol class="qs">
+      <li>この場にいなかったエンジニアが、この Discovery brief だけで作業を始められるか</li>
+      <li>チームが決めていないことが、決めたこととして書かれていないか</li>
+      <li>未検証の仮説が、開発への問いとして書かれているか</li>
+      <li>先送りした候補は、どんなエビデンスがあれば次に上がるか。それを誰が集めるか</li>
+    </ol>
+  </div>
+</section>
+<section class="slide" data-theme="handoff" data-chap="10. Handoff">
+  <h2>Handoff の成果物</h2>
+  <div class="body">
+    <table>
+      <tr><th>成果物</th><th>位置づけと作成目的</th><th>後で読む人</th></tr>
+      <tr><td>Discovery brief<span class="fn">handoff/discovery-brief.md</span></td><td>開発の出発点になる 1 つの文書</td><td>開発チーム、AI-DLC</td></tr>
+      <tr><td>次のステップ<span class="fn">handoff/next-steps.md</span></td><td>開発の始め方、条件、フォローアップ、ロードマップ</td><td>プロダクトオーナー、フォローアップの担当者</td></tr>
+    </table>
+    <ul class="sm">
+      <li>AI-DLC で開発する場合、ペルソナは AI-DLC のチームナレッジにもそのまま書き出され、AI-DLC がペルソナを読める</li>
+      <li>生のデータを置く <code>discovery/data/</code> は、バージョン管理の対象から外される</li>
+    </ul>
+  </div>
+</section>
+<section class="slide" data-theme="handoff" data-chap="10. Handoff">
+  <h2>Discovery brief の 15 節</h2>
+  <div class="body">
+    <table class="t15">
+      <tr><th>節</th><th>内容</th><th>元になる成果物</th></tr>
+      <tr><td>1. Context</td><td>日付、開発の進め方、データの種類</td><td><code>PROJECT.md</code></td></tr>
+      <tr><td>2. Decision</td><td>commit、pivot、park、理由、開発前の条件、次に起きること</td><td>決定</td></tr>
+      <tr><td>3. Problem and evidence</td><td>問題と、上位のシグナル（頻度、深刻度、到達範囲、引用）</td><td>シグナル分析レポート</td></tr>
+      <tr><td>4. Target customers and personas</td><td>ペルソナごとに 1 段落</td><td>ペルソナ</td></tr>
+      <tr><td>5. Prioritized use cases</td><td>採点の表、上書きとその理由、取り組むユースケース</td><td>ユースケースの採点</td></tr>
+      <tr><td>6. PR/FAQ summary</td><td>見出し、顧客の便益、開発をいちばん縛る 3 つの FAQ</td><td>PR/FAQ</td></tr>
+      <tr><td>7. Success criteria</td><td>指標、ベースライン、目標、時期。AI 機能なら AI 品質目標</td><td>リスクレビュー</td></tr>
+      <tr><td>8. GTM</td><td>ファーストアダプター、ポジショニング、事業性、導入と成功</td><td>GTM</td></tr>
+      <tr><td>9. Scope</td><td>対象と対象外。AI 機能なら AI feature block</td><td>PRD</td></tr>
+      <tr><td>10. Prioritized backlog</td><td>P0、P1、P2 の機能を 1 行ずつ</td><td>PRD</td></tr>
+      <tr><td>11. Prototype screens and user flows</td><td>引き渡すバージョンの画面と主な流れ、変化</td><td>プロトタイプのメモと記録</td></tr>
+      <tr><td>12. Current product</td><td>いまのプロダクトの概要。新規ならその旨</td><td>いまのプロダクトの地図（ある場合）</td></tr>
+      <tr><td>13. Constraints</td><td>規制、連携が必要なシステム、期限など</td><td>チームの発言</td></tr>
+      <tr><td>14. Open hypotheses and assumptions</td><td>未決着の仮説、Assumed と Needs evidence、前提、プレモーテム</td><td>仮説、リスクレビュー、優先順位</td></tr>
+      <tr><td>15. Full artifacts</td><td>すべての成果物へのリンク</td><td>すべて</td></tr>
+    </table>
+  </div>
+</section>
+<section class="slide" data-theme="handoff" data-chap="10. Handoff">
+  <h2>Discovery brief の読み方とレビュー観点</h2>
+  <div class="body">
+    <div class="callout"><p><b>読み方:</b> 参加していないエンジニアになったつもりで、<b>2. Decision → 9. Scope → 14. Open hypotheses and assumptions</b> の順に読む。何を作り、何を作らず、何がまだ分からないかがつかめる。</p></div>
+    <ul class="rv" style="gap:8px">
+      <li>この文書だけで、開発を始められるか</li>
+      <li>14. Open hypotheses and assumptions の項目が、開発への問いとして書かれているか</li>
+      <li>チームが決めていないことが、決めたこととして書かれていないか</li>
+      <li>ペルソナの名前が、ペルソナのファイルの 1 行目と同じか</li>
+      <li>アーキテクチャ、技術の選定、顧客のアカウントや売上の情報が入っていないか</li>
+      <li>リンクがすべて開くか</li>
+    </ul>
+    <div class="pit"><b>落とし穴:</b> 成果物を丸ごと写して長くなりすぎる。要約とリンクで構成し、20 万文字に収める。</div>
+  </div>
+</section>
+<section class="slide" data-theme="handoff" data-chap="10. Handoff">
+  <h2>次のステップとロードマップ</h2>
+  <div class="body">
+    <p class="xs"><code>next-steps.md</code>: 開発の始め方（AI-DLC なら、フォルダをリポジトリに入れてコマンドを実行する手順。pivot、park なら 30 日後に何をするか）、開発前の条件、フォローアップ、ロードマップ。</p>
+    <table class="t17">
+      <tr><th>区分</th><th>各項目にあるべきもの</th><th>レビュー観点</th></tr>
+      <tr><td>Now</td><td>取り組むユースケース、開発前の条件（順番に）、成功基準</td><td>条件が決定の文書と一致しているか</td></tr>
+      <tr><td>Next</td><td>先送りした候補ごとに、順位を上げるエビデンス、集める人、どのフォローアップまでか</td><td>エビデンスを集める人の名前があるか</td></tr>
+      <tr><td>Later</td><td>それ以外の候補ごとに、後に回す理由。ゲートで落ちた候補と戻しうる仮説</td><td>落とした理由が採点の記録と一致しているか</td></tr>
+    </table>
+    <ul class="rv xs">
+      <li>PRD にない機能や、新しいアイデアが足されていないか</li>
+      <li>納期が書かれていないか（納期はプロダクトオーナーが開発チームと決める）</li>
+      <li>フォローアップの担当者に名前がついているか</li>
+    </ul>
+  </div>
+</section>
+<section class="slide" data-theme="handoff" data-chap="10. Handoff">
+  <h2>チェックポイントと報告会</h2>
+  <div class="body">
+    <div class="ck-q">この場にいなかったエンジニアが、<br>この Discovery brief から作業を始められますか。</div>
+    <div class="cols" style="grid-template-columns:1.4fr 1fr">
+      <div>
+        <div class="ck-label">その前に確かめること</div>
+        <ul class="check sm">
+          <li>この場にいなかったエンジニアが、Discovery brief から作業を始められるか</li>
+          <li>未検証の仮説が、開発への問いとして書かれているか</li>
+          <li>チームが決めていないことが、決めたこととして書かれていないか</li>
+          <li>ロードマップの Next の各項目に、エビデンスを集める人がいるか</li>
+        </ul>
+      </div>
+      <div class="block">
+        <h3>報告会</h3>
+        <p>スポンサーに、決定、プロトタイプ、成功基準、次のステップを見せる。「なぜ私の考えをやらないのか」には Signals のエビデンスで答える。名前と期限を合意して終える。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ===================== 11 章 ワークショップのあと ===================== -->
+<section class="slide" data-chap="11. ワークショップのあと">
+  <h2>AI-DLC Discovery のサイクル</h2>
+  <div class="body">
+    <div class="fig"><img src="images/fig-1-10-discovery-cycle.svg" alt="AI-DLC Discovery のサイクル"></div>
+  </div>
+</section>
+<section class="slide" data-chap="11. ワークショップのあと">
+  <h2>フォローアップ</h2>
+  <div class="body">
+    <table>
+      <tr><th style="width:190px">いつ</th><th>すること</th></tr>
+      <tr><td>7 日後まで</td><td>ビジネス指標のベースラインをそろえる。Discovery brief を開発するリポジトリに入れる。次のステップの担当者が動き始める</td></tr>
+      <tr><td>30 日後まで</td><td>実際の利用者にプロトタイプを試してもらう。未検証の仮説を顧客で確かめる（アンケートを作るスキル <code>discovery-survey</code> もある）。先送りした候補を見直す</td></tr>
+      <tr><td>開発を始める</td><td>AI-DLC なら、次のステップのコマンドで始める。AI-DLC は Discovery brief を唯一の入力に、要求、ユーザーストーリー、設計を作る。pivot、park なら 30 日後に見直す</td></tr>
+      <tr><td>30 日後と 60 日後</td><td>導入状況とビジネス指標を、成功基準と撤退基準に照らして確かめる</td></tr>
+      <tr><td>次のサイクルへ</td><td>学んだことを次の Signals に戻す（継続的ディスカバリー。Teresa Torres『Continuous Discovery Habits』）</td></tr>
+    </table>
+  </div>
+</section>
+<!-- ===================== まとめ ===================== -->
+<section class="slide" data-chap="まとめ">
+  <h2>まとめ</h2>
+  <div class="body">
+    <ul class="rv" style="gap:16px">
+      <li style="font-size:24px">AI-DLC Discovery は、顧客のエビデンスから「最初に作るもの」を決め、開発の出発点になる Discovery brief を作る方法論</li>
+      <li style="font-size:24px">AI アシスタントが分析と下書きを引き受け、チームが異議を出し、上書きし、決める</li>
+      <li style="font-size:24px">レビューでは、まずエビデンスラベルを見る。Assumed と Needs evidence こそ、チームが目を向けるところ</li>
+      <li style="font-size:24px">目標の数字が、North Star、PR/FAQ、PRD、成功基準、GTM でそろっているか確かめる</li>
+      <li style="font-size:24px">分からないことは、未検証の仮説として正直に残し、ワークショップのあとに顧客で確かめる</li>
+    </ul>
+  </div>
+</section>
+
+</div>
+<script>
+(() => {
+  const deck = document.getElementById('deck');
+  const slides = Array.from(deck.querySelectorAll('.slide'));
+  const total = slides.length;
+  slides.forEach((s, i) => {
+    const n = document.createElement('div');
+    n.className = 'pno'; n.textContent = (i + 1) + ' / ' + total;
+    s.appendChild(n);
+    const chap = s.dataset.chap;
+    if (chap && !s.classList.contains('divider') && !s.classList.contains('cover')) {
+      const c = document.createElement('div');
+      c.className = 'chap'; c.textContent = chap;
+      s.insertBefore(c, s.firstChild);
+    }
+  });
+  let cur = 0;
+  function fit() {
+    const k = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+    deck.style.transform = 'translate(-50%, -50%) scale(' + k + ')';
+  }
+  function show(i, push) {
+    cur = Math.max(0, Math.min(total - 1, i));
+    slides.forEach((s, j) => s.classList.toggle('active', j === cur));
+    if (push !== false) history.replaceState(null, '', '#' + (cur + 1));
+  }
+  function fromHash() {
+    const n = parseInt(location.hash.slice(1), 10);
+    show(isNaN(n) ? 0 : n - 1, false);
+  }
+  document.addEventListener('keydown', e => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const k = e.key;
+    if (['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter'].includes(k)) { e.preventDefault(); show(cur + 1); }
+    else if (['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'].includes(k)) { e.preventDefault(); show(cur - 1); }
+    else if (k === 'Home') show(0);
+    else if (k === 'End') show(total - 1);
+    else if (k === 'f' || k === 'F') {
+      if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen();
+    }
+  });
+  document.addEventListener('click', e => {
+    if (e.target.closest('a')) return;
+    if (e.clientX < window.innerWidth / 3) show(cur - 1); else show(cur + 1);
+  });
+  window.addEventListener('resize', fit);
+  window.addEventListener('hashchange', fromHash);
+  fit(); fromHash();
+})();
+</script>
+</body>
+</html>

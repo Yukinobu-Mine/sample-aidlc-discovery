@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 540" width="900" height="540" role="img" aria-labelledby="title desc">
+  <title id="title">ユースケースが絞られていく流れ</title>
+  <desc id="desc">チームの候補と Signals から追加した候補を集め、同じ問題を解く候補を統合し、ゲートで落とし、6 つの評価軸と重みで採点します。加重スコアと確信度から、Build first または Prototype to learn、Defer、Drop のいずれかに決まります。今日取り組むのは 1 つだけです。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6470"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif; fill: #1d2733; }
+    .h { font-size: 16px; font-weight: 700; }
+    .b { font-size: 13px; }
+    .m { fill: #5b6470; }
+    .w { fill: #ffffff; }
+  </style>
+  <rect width="900" height="540" fill="#ffffff"/>
+
+  <!-- Funnel stages (Working Backwards color, lighter to darker) -->
+  <path d="M130,20 H770 L740,92 H160 Z" fill="#efe9f7" stroke="#6b46a8" stroke-width="1.5"/>
+  <text x="450" y="44" text-anchor="middle" class="h">1. 候補を集める</text>
+  <text x="450" y="64" text-anchor="middle" class="b">チームの候補 3〜5 個（機能ではなく問題として書く）</text>
+  <text x="450" y="82" text-anchor="middle" class="b m">＋ Signals から追加した候補 2〜3 個（残すか外すかをチームが決める）</text>
+
+  <path d="M160,100 H740 L710,166 H190 Z" fill="#e2d8f1" stroke="#6b46a8" stroke-width="1.5"/>
+  <text x="450" y="126" text-anchor="middle" class="h">2. 統合する</text>
+  <text x="450" y="148" text-anchor="middle" class="b">同じ問題を解く候補、ほかの候補の症状や解決策の 1 つにすぎない候補をまとめる</text>
+
+  <path d="M190,174 H710 L680,240 H220 Z" fill="#d2c3ea" stroke="#6b46a8" stroke-width="1.5"/>
+  <text x="450" y="200" text-anchor="middle" class="h">3. ゲート</text>
+  <text x="450" y="222" text-anchor="middle" class="b">エビデンス、ビジネス成果、担当者、開発の道筋、ペインキラー</text>
+
+  <path d="M220,248 H680 L650,314 H250 Z" fill="#6b46a8" stroke="#6b46a8" stroke-width="1.5"/>
+  <text x="450" y="274" text-anchor="middle" class="h w">4. 採点</text>
+  <text x="450" y="296" text-anchor="middle" class="b w">6 つの評価軸 × 重み → 加重スコア、確信度</text>
+
+  <!-- Gate note -->
+  <line x1="700" y1="207" x2="736" y2="207" stroke="#5b6470" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="740" y="166" width="150" height="86" rx="8" fill="#f4f5f7" stroke="#9aa3ad" stroke-width="1.2"/>
+  <text x="752" y="188" class="b" style="font-weight:700">落ちた候補</text>
+  <text x="752" y="208" class="b">理由を記録する。</text>
+  <text x="752" y="226" class="b">残したい案は未検証</text>
+  <text x="752" y="244" class="b">の仮説にする</text>
+
+  <!-- To decisions -->
+  <line x1="450" y1="318" x2="450" y2="350" stroke="#5b6470" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Decisions -->
+  <rect x="30" y="358" width="330" height="160" rx="12" fill="#efe9f7" stroke="#6b46a8" stroke-width="2.5"/>
+  <text x="46" y="386" class="h">Build first / Prototype to learn</text>
+  <text x="46" y="412" class="b">加重スコア 3.5 以上</text>
+  <text x="46" y="434" class="b">・確信度 High → Build first（最初に作る）</text>
+  <text x="46" y="456" class="b">・それ以外 → Prototype to learn（学ぶため</text>
+  <text x="46" y="474" class="b">　に試作する）</text>
+  <text x="46" y="502" class="b" style="font-weight:700;fill:#6b46a8">今日取り組むのは、最も高い 1 つだけ</text>
+
+  <rect x="380" y="358" width="270" height="160" rx="12" fill="#f4f5f7" stroke="#9aa3ad" stroke-width="1.5"/>
+  <text x="396" y="386" class="h">Defer（先送り）</text>
+  <text x="396" y="412" class="b">加重スコア 2.5〜3.4</text>
+  <text x="396" y="434" class="b">3.5 以上の 2 番手以降は</text>
+  <text x="396" y="452" class="b">Defer, next in line（先送り・次点）</text>
+  <text x="396" y="480" class="b m">30 日後のフォローアップで、</text>
+  <text x="396" y="498" class="b m">新しいエビデンスで見直す</text>
+
+  <rect x="670" y="358" width="200" height="160" rx="12" fill="#f4f5f7" stroke="#9aa3ad" stroke-width="1.5"/>
+  <text x="686" y="386" class="h">Drop（見送り）</text>
+  <text x="686" y="412" class="b">加重スコア 2.5 未満</text>
+  <text x="686" y="434" class="b m">理由を記録する</text>
+</svg>

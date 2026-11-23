@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1090 616" width="1090" height="616" role="img" aria-labelledby="title desc">
+  <title id="title">AI-DLC Discovery の成果物の依存関係</title>
+  <desc id="desc">Signals のチームの予想からシグナル分析レポートと仮説ができます。シグナル分析レポートからペルソナ、ユースケースの採点、Working Backwards 文書、PR/FAQ、PRD、最もリスクの高い前提が順にできます。PR/FAQ から GTM を下書きします。PRD からプロトタイプ、最もリスクの高い前提とプロトタイプからペルソナによる講評ができます。講評からリスクレビュー、問題の優先順位、決定ができ、GTM も決定の入力になります。決定から Discovery brief と次のステップができます。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6470"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif; fill: #1d2733; }
+    .ph { font-size: 14px; font-weight: 700; fill: #ffffff; }
+    .n { font-size: 13px; font-weight: 700; }
+    .f { font-size: 11px; fill: #5b6470; font-family: Menlo, Consolas, monospace; }
+    .b { font-size: 13px; }
+    .m { fill: #5b6470; }
+  </style>
+  <rect width="1090" height="616" fill="#ffffff"/>
+
+  <!-- Phase headers -->
+  <rect x="20" y="20" width="180" height="32" rx="8" fill="#2563a8"/>
+  <rect x="240" y="20" width="200" height="32" rx="8" fill="#6b46a8"/>
+  <rect x="480" y="20" width="180" height="32" rx="8" fill="#b86e00"/>
+  <rect x="700" y="20" width="180" height="32" rx="8" fill="#b23b3b"/>
+  <rect x="920" y="20" width="150" height="32" rx="8" fill="#2f7d4f"/>
+  <text x="110" y="41" text-anchor="middle" class="ph">Signals</text>
+  <text x="340" y="41" text-anchor="middle" class="ph">Working Backwards</text>
+  <text x="570" y="41" text-anchor="middle" class="ph">Prototype</text>
+  <text x="790" y="41" text-anchor="middle" class="ph">Validate</text>
+  <text x="995" y="41" text-anchor="middle" class="ph">Handoff</text>
+
+  <!-- Signals nodes -->
+  <g fill="#e8f0f9" stroke="#2563a8" stroke-width="1.5">
+    <rect x="20" y="70" width="180" height="44" rx="8"/>
+    <rect x="20" y="130" width="180" height="44" rx="8"/>
+    <rect x="20" y="190" width="180" height="44" rx="8"/>
+  </g>
+  <text x="32" y="89" class="n">チームの予想</text><text x="32" y="106" class="f">team-expectations.md</text>
+  <text x="32" y="149" class="n">シグナル分析レポート</text><text x="32" y="166" class="f">signal-summary.md</text>
+  <text x="32" y="209" class="n">仮説</text><text x="32" y="226" class="f">hypotheses.md</text>
+
+  <!-- Working Backwards nodes -->
+  <g fill="#efe9f7" stroke="#6b46a8" stroke-width="1.5">
+    <rect x="240" y="130" width="200" height="44" rx="8"/>
+    <rect x="240" y="190" width="200" height="44" rx="8"/>
+    <rect x="240" y="250" width="200" height="44" rx="8"/>
+    <rect x="240" y="310" width="200" height="44" rx="8"/>
+    <rect x="240" y="370" width="200" height="44" rx="8"/>
+    <rect x="240" y="430" width="200" height="44" rx="8"/>
+    <rect x="240" y="490" width="200" height="44" rx="8"/>
+  </g>
+  <text x="252" y="149" class="n">ペルソナ</text><text x="252" y="166" class="f">personas/*.md</text>
+  <text x="252" y="209" class="n">ユースケースの採点</text><text x="252" y="226" class="f">use-case-scoring.md</text>
+  <text x="252" y="269" class="n">Working Backwards 文書</text><text x="252" y="286" class="f">working-backwards.md ほか</text>
+  <text x="252" y="329" class="n">PR/FAQ</text><text x="252" y="346" class="f">prfaq.md</text>
+  <text x="252" y="389" class="n">PRD</text><text x="252" y="406" class="f">prd.md</text>
+  <text x="252" y="449" class="n">最もリスクの高い前提</text><text x="252" y="466" class="f">riskiest-assumption.md</text>
+  <text x="252" y="509" class="n">GTM（Validate で完成）</text><text x="252" y="526" class="f">gtm.md</text>
+
+  <!-- Prototype nodes -->
+  <g fill="#fdf3e3" stroke="#b86e00" stroke-width="1.5">
+    <rect x="480" y="370" width="180" height="44" rx="8"/>
+    <rect x="480" y="430" width="180" height="44" rx="8"/>
+  </g>
+  <text x="492" y="389" class="n">プロトタイプ</text><text x="492" y="406" class="f">v1.html … index.html</text>
+  <text x="492" y="449" class="n">ペルソナによる講評</text><text x="492" y="466" class="f">persona-critique.md</text>
+
+  <!-- Validate nodes -->
+  <g fill="#fbeaea" stroke="#b23b3b" stroke-width="1.5">
+    <rect x="700" y="370" width="180" height="44" rx="8"/>
+    <rect x="700" y="430" width="180" height="44" rx="8"/>
+    <rect x="700" y="490" width="180" height="44" rx="8"/>
+  </g>
+  <text x="712" y="389" class="n">問題の優先順位</text><text x="712" y="406" class="f">prioritization.md</text>
+  <text x="712" y="449" class="n">リスクレビュー</text><text x="712" y="466" class="f">risk-review.md</text>
+  <text x="712" y="509" class="n">決定</text><text x="712" y="526" class="f">decision.md</text>
+
+  <!-- Handoff nodes -->
+  <g fill="#e8f3ec" stroke="#2f7d4f" stroke-width="1.5">
+    <rect x="920" y="490" width="150" height="44" rx="8"/>
+    <rect x="920" y="550" width="150" height="44" rx="8"/>
+  </g>
+  <text x="932" y="509" class="n">Discovery brief</text><text x="932" y="526" class="f">discovery-brief.md</text>
+  <text x="932" y="569" class="n">次のステップ</text><text x="932" y="586" class="f">next-steps.md</text>
+
+  <!-- Arrows -->
+  <g stroke="#5b6470" stroke-width="1.8" fill="none" marker-end="url(#arrow)">
+    <line x1="110" y1="114" x2="110" y2="128"/>
+    <line x1="110" y1="174" x2="110" y2="188"/>
+    <line x1="200" y1="152" x2="238" y2="152"/>
+    <line x1="340" y1="174" x2="340" y2="188"/>
+    <line x1="340" y1="234" x2="340" y2="248"/>
+    <line x1="340" y1="294" x2="340" y2="308"/>
+    <line x1="340" y1="354" x2="340" y2="368"/>
+    <line x1="340" y1="414" x2="340" y2="428"/>
+    <path d="M240,332 H224 V512 H238"/>
+    <line x1="440" y1="392" x2="478" y2="392"/>
+    <line x1="440" y1="452" x2="478" y2="452"/>
+    <line x1="570" y1="414" x2="570" y2="428"/>
+    <line x1="660" y1="452" x2="698" y2="452"/>
+    <line x1="790" y1="430" x2="790" y2="416"/>
+    <line x1="790" y1="474" x2="790" y2="488"/>
+    <line x1="440" y1="512" x2="698" y2="512"/>
+    <line x1="880" y1="512" x2="918" y2="512"/>
+    <line x1="995" y1="534" x2="995" y2="548"/>
+  </g>
+
+  <!-- Notes -->
+  <text x="480" y="90" class="b" style="font-weight:700">読み方</text>
+  <text x="480" y="114" class="b">矢印は、成果物が次の成果物の入力になる主な関係です。</text>
+  <text x="480" y="136" class="b">前の成果物を直したら、矢印の先にある成果物も見直します。</text>
+  <text x="480" y="168" class="b m">チームの予想と仮説のうち、データで決着しなかったものは、</text>
+  <text x="480" y="188" class="b m">Validate の未検証の仮説を経て Discovery brief に残ります。</text>
+
+  <rect x="910" y="260" width="170" height="150" rx="10" fill="#ffffff" stroke="#2f7d4f" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="922" y="286" class="b" style="font-weight:700">Discovery brief は、</text>
+  <text x="922" y="308" class="b">すべての成果物を</text>
+  <text x="922" y="328" class="b">要約し、元の成果物</text>
+  <text x="922" y="348" class="b">へのリンクを持つ</text>
+  <text x="922" y="378" class="b m">（15 の節）</text>
+  <line x1="995" y1="412" x2="995" y2="486" stroke="#2f7d4f" stroke-width="1.5" stroke-dasharray="5 4"/>
+</svg>

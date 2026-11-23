@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1034 600" width="1034" height="600" role="img" aria-labelledby="title desc">
+  <title id="title">AI-DLC Discovery の全体の流れ</title>
+  <desc id="desc">セットアップのあと、Signals、Working Backwards、Prototype、Validate、Handoff の 5 つのフェーズを順に進み、最後に報告会を行います。各フェーズには答える問い、作る主な成果物、終わりのチェックポイントがあります。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6470"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif; fill: #1d2733; }
+    .ph { font-size: 16px; font-weight: 700; fill: #ffffff; }
+    .gl { font-size: 12px; fill: #ffffff; }
+    .q { font-size: 13px; font-weight: 700; }
+    .b { font-size: 13px; }
+    .lab { font-size: 11px; font-weight: 700; fill: #5b6470; }
+    .m { fill: #5b6470; }
+    .bar { font-size: 14px; }
+  </style>
+  <rect width="1034" height="600" fill="#ffffff"/>
+
+  <!-- Setup -->
+  <rect x="20" y="16" width="994" height="48" rx="10" fill="#f4f5f7" stroke="#9aa3ad" stroke-width="1.5"/>
+  <text x="40" y="46" class="bar"><tspan style="font-weight:700">セットアップ</tspan>　プロダクトと利用者、参加者、ビジネス指標とその向きとベースライン、データを確認する（PROJECT.md）</text>
+  <line x1="517" y1="66" x2="517" y2="90" stroke="#5b6470" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Column frames -->
+  <g fill="#ffffff" stroke="#dfe3ea" stroke-width="1.5">
+    <rect x="20" y="96" width="178" height="400" rx="10"/>
+    <rect x="224" y="96" width="178" height="400" rx="10"/>
+    <rect x="428" y="96" width="178" height="400" rx="10"/>
+    <rect x="632" y="96" width="178" height="400" rx="10"/>
+    <rect x="836" y="96" width="178" height="400" rx="10"/>
+  </g>
+
+  <!-- Headers -->
+  <rect x="20" y="96" width="178" height="58" rx="10" fill="#2563a8"/>
+  <rect x="224" y="96" width="178" height="58" rx="10" fill="#6b46a8"/>
+  <rect x="428" y="96" width="178" height="58" rx="10" fill="#b86e00"/>
+  <rect x="632" y="96" width="178" height="58" rx="10" fill="#b23b3b"/>
+  <rect x="836" y="96" width="178" height="58" rx="10" fill="#2f7d4f"/>
+  <text x="109" y="121" text-anchor="middle" class="ph">1. Signals</text>
+  <text x="109" y="142" text-anchor="middle" class="gl">顧客シグナルの分析</text>
+  <text x="313" y="121" text-anchor="middle" class="ph" style="font-size:13.5px">2. Working Backwards</text>
+  <text x="313" y="142" text-anchor="middle" class="gl">顧客から逆算する</text>
+  <text x="517" y="121" text-anchor="middle" class="ph">3. Prototype</text>
+  <text x="517" y="142" text-anchor="middle" class="gl">試作と講評</text>
+  <text x="721" y="121" text-anchor="middle" class="ph">4. Validate</text>
+  <text x="721" y="142" text-anchor="middle" class="gl">検証</text>
+  <text x="925" y="121" text-anchor="middle" class="ph">5. Handoff</text>
+  <text x="925" y="142" text-anchor="middle" class="gl">引き渡し</text>
+
+  <!-- Arrows between phases -->
+  <g stroke="#5b6470" stroke-width="2" marker-end="url(#arrow)">
+    <line x1="201" y1="125" x2="220" y2="125"/>
+    <line x1="405" y1="125" x2="424" y2="125"/>
+    <line x1="609" y1="125" x2="628" y2="125"/>
+    <line x1="813" y1="125" x2="832" y2="125"/>
+  </g>
+
+  <!-- Questions -->
+  <g class="lab">
+    <text x="34" y="178">問い</text><text x="238" y="178">問い</text><text x="442" y="178">問い</text><text x="646" y="178">問い</text><text x="850" y="178">問い</text>
+  </g>
+  <text x="34" y="200" class="q">顧客は何を</text>
+  <text x="34" y="220" class="q">伝えているか</text>
+  <text x="238" y="200" class="q">どの問題を誰のために</text>
+  <text x="238" y="220" class="q">解き、どう形にするか</text>
+  <text x="442" y="200" class="q">それはどんな</text>
+  <text x="442" y="220" class="q">体験か</text>
+  <text x="646" y="200" class="q">何が失敗の原因に</text>
+  <text x="646" y="220" class="q">なりうるか。成功を</text>
+  <text x="646" y="240" class="q">どう測るか</text>
+  <text x="850" y="200" class="q">開発は何から</text>
+  <text x="850" y="220" class="q">始めるか</text>
+
+  <!-- Artifacts -->
+  <g class="lab">
+    <text x="34" y="270">主な成果物</text><text x="238" y="270">主な成果物</text><text x="442" y="270">主な成果物</text><text x="646" y="270">主な成果物</text><text x="850" y="270">主な成果物</text>
+  </g>
+  <g class="b">
+    <text x="34" y="292">・チームの予想</text>
+    <text x="34" y="314">・シグナル分析レポート</text>
+    <text x="34" y="336">・仮説</text>
+
+    <text x="238" y="292">・ペルソナ</text>
+    <text x="238" y="314">・ユースケースの採点</text>
+    <text x="238" y="336">・PR/FAQ、PRD</text>
+    <text x="238" y="358">・GTM の下書き</text>
+    <text x="238" y="380">・最もリスクの高い前提</text>
+
+    <text x="442" y="292">・プロトタイプ</text>
+    <text x="442" y="314">・ペルソナによる講評</text>
+
+    <text x="646" y="292">・リスクレビュー</text>
+    <text x="646" y="314">・問題の優先順位</text>
+    <text x="646" y="336">・GTM の完成</text>
+    <text x="646" y="358">・決定</text>
+
+    <text x="850" y="292">・Discovery brief</text>
+    <text x="850" y="314">・次のステップと</text>
+    <text x="850" y="336">　ロードマップ</text>
+  </g>
+
+  <!-- Checkpoints -->
+  <g fill="#fffaf0" stroke="#b86e00" stroke-width="1.5" stroke-dasharray="5 4">
+    <rect x="30" y="404" width="158" height="82" rx="8"/>
+    <rect x="234" y="404" width="158" height="82" rx="8"/>
+    <rect x="438" y="404" width="158" height="82" rx="8"/>
+    <rect x="642" y="404" width="158" height="82" rx="8"/>
+    <rect x="846" y="404" width="158" height="82" rx="8"/>
+  </g>
+  <g class="lab" style="fill:#8a5a00">
+    <text x="42" y="422">チェックポイント</text><text x="246" y="422">チェックポイント</text><text x="450" y="422">チェックポイント</text><text x="654" y="422">チェックポイント</text><text x="858" y="422">チェックポイント</text>
+  </g>
+  <g class="b">
+    <text x="42" y="444">取り組む問題を決める</text>
+    <text x="42" y="464">前に、異議はあるか</text>
+
+    <text x="246" y="444">プロトタイプで</text>
+    <text x="246" y="464">何を証明するか</text>
+
+    <text x="450" y="444">この案が失敗する理由</text>
+    <text x="450" y="464">を探す準備はできたか</text>
+
+    <text x="654" y="444">commit、pivot、</text>
+    <text x="654" y="464">park のどれか</text>
+
+    <text x="858" y="440">この場にいなかった</text>
+    <text x="858" y="458">エンジニアでも開発を</text>
+    <text x="858" y="476">始められるか</text>
+  </g>
+
+  <!-- Readout -->
+  <line x1="517" y1="498" x2="517" y2="524" stroke="#5b6470" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="20" y="530" width="994" height="48" rx="10" fill="#f4f5f7" stroke="#9aa3ad" stroke-width="1.5"/>
+  <text x="40" y="560" class="bar"><tspan style="font-weight:700">報告会</tspan>　スポンサーに決定、プロトタイプ、成功基準、次のステップを見せ、担当者と期限を合意する</text>
+</svg>

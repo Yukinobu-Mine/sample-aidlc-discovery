@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1010 500" width="1010" height="500" role="img" aria-labelledby="title desc">
+  <title id="title">Working Backwards の流れ</title>
+  <desc id="desc">Working Backwards の 5 つの問い（Listen、Define、Invent、Refine、Test）に答え、Define で Today statement、How Might We、North Star を書きます。そのあと、機能の説明、PR/FAQ、準備度チェック、PRD、最もリスクの高い前提の順に進み、Prototype に渡します。PR/FAQ からは GTM の下書きも作ります。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6470"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif; fill: #1d2733; }
+    .h { font-size: 15px; font-weight: 700; }
+    .b { font-size: 13px; }
+    .s { font-size: 12px; }
+    .m { fill: #5b6470; }
+    .lab { font-size: 13px; font-weight: 700; fill: #6b46a8; }
+  </style>
+  <rect width="1010" height="500" fill="#ffffff"/>
+
+  <!-- Five questions -->
+  <text x="20" y="28" class="lab">Working Backwards の 5 つの問い（チームが答え、Working Backwards 文書にまとまる）</text>
+  <g fill="#efe9f7" stroke="#6b46a8" stroke-width="1.5">
+    <rect x="20" y="40" width="182" height="84" rx="10"/>
+    <rect x="221" y="40" width="182" height="84" rx="10"/>
+    <rect x="422" y="40" width="182" height="84" rx="10"/>
+    <rect x="623" y="40" width="182" height="84" rx="10"/>
+    <rect x="824" y="40" width="166" height="84" rx="10"/>
+  </g>
+  <g stroke="#5b6470" stroke-width="2" marker-end="url(#arrow)">
+    <line x1="204" y1="82" x2="218" y2="82"/>
+    <line x1="405" y1="82" x2="419" y2="82"/>
+    <line x1="606" y1="82" x2="620" y2="82"/>
+    <line x1="807" y1="82" x2="821" y2="82"/>
+  </g>
+  <text x="34" y="66" class="h">1. Listen</text>
+  <text x="34" y="90" class="b">顧客は誰か。どんな</text>
+  <text x="34" y="110" class="b">洞察と痛みがあるか</text>
+  <text x="235" y="66" class="h">2. Define</text>
+  <text x="235" y="90" class="b">核となる問題は何か。</text>
+  <text x="235" y="110" class="b">影響はどれだけか</text>
+  <text x="436" y="66" class="h">3. Invent</text>
+  <text x="436" y="90" class="b">どんな解決策と</text>
+  <text x="436" y="110" class="b">中心の機能がありうるか</text>
+  <text x="637" y="66" class="h">4. Refine</text>
+  <text x="637" y="90" class="b">顧客の体験は、初日と</text>
+  <text x="637" y="110" class="b">その後でどう流れるか</text>
+  <text x="838" y="66" class="h">5. Test</text>
+  <text x="838" y="90" class="b">成功をどう測り、</text>
+  <text x="838" y="110" class="b">前提をどう確かめるか</text>
+
+  <!-- Define callout -->
+  <path d="M312,126 V140" stroke="#6b46a8" stroke-width="1.5"/>
+  <rect x="20" y="140" width="970" height="58" rx="10" fill="#ffffff" stroke="#6b46a8" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="36" y="164" class="b" style="font-weight:700">Define で 3 つの文を書く</text>
+  <text x="36" y="186" class="s m">問題の捉え方と目標の数字をそろえる</text>
+  <rect x="300" y="152" width="210" height="34" rx="17" fill="#efe9f7"/>
+  <text x="405" y="174" text-anchor="middle" class="b">Today statement（現状の課題文）</text>
+  <text x="522" y="174" text-anchor="middle" class="b m">→</text>
+  <rect x="535" y="152" width="140" height="34" rx="17" fill="#efe9f7"/>
+  <text x="605" y="174" text-anchor="middle" class="b">How Might We</text>
+  <text x="687" y="174" text-anchor="middle" class="b m">→</text>
+  <rect x="700" y="152" width="270" height="34" rx="17" fill="#efe9f7"/>
+  <text x="835" y="174" text-anchor="middle" class="b">North Star（目指す到達点と数字）</text>
+
+  <line x1="111" y1="200" x2="111" y2="232" stroke="#5b6470" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Documents -->
+  <text x="122" y="222" class="lab" style="fill:#1d2733">文書にする</text>
+  <g fill="#ffffff" stroke="#6b46a8" stroke-width="1.5">
+    <rect x="20" y="238" width="182" height="96" rx="10"/>
+    <rect x="221" y="238" width="182" height="96" rx="10"/>
+    <rect x="422" y="238" width="182" height="96" rx="10"/>
+    <rect x="623" y="238" width="182" height="96" rx="10"/>
+  </g>
+  <rect x="824" y="238" width="166" height="96" rx="10" fill="#6b46a8" stroke="#6b46a8" stroke-width="1.5"/>
+  <g stroke="#5b6470" stroke-width="2" marker-end="url(#arrow)">
+    <line x1="204" y1="286" x2="218" y2="286"/>
+    <line x1="405" y1="286" x2="419" y2="286"/>
+    <line x1="606" y1="286" x2="620" y2="286"/>
+    <line x1="807" y1="286" x2="821" y2="286"/>
+  </g>
+  <text x="34" y="264" class="h">機能の説明</text>
+  <text x="34" y="290" class="b">3〜5 個の機能案から</text>
+  <text x="34" y="310" class="b">1 つを選ぶ</text>
+  <text x="235" y="264" class="h">PR/FAQ</text>
+  <text x="235" y="290" class="b">発売日のプレスリリース</text>
+  <text x="235" y="310" class="b">と FAQ を書く</text>
+  <text x="436" y="264" class="h">準備度チェック</text>
+  <text x="436" y="290" class="b">試作に進めるかを 7 つの</text>
+  <text x="436" y="310" class="b">問いで確かめる</text>
+  <text x="637" y="264" class="h">PRD</text>
+  <text x="637" y="290" class="b">P0、P1、P2 の要求と</text>
+  <text x="637" y="310" class="b">作らないものを決める</text>
+  <text x="838" y="264" class="h" style="fill:#ffffff">最もリスクの</text>
+  <text x="838" y="284" class="h" style="fill:#ffffff">高い前提</text>
+  <text x="838" y="310" class="b" style="fill:#ffffff">プロトタイプで</text>
+  <text x="838" y="328" class="b" style="fill:#ffffff">確かめる 1 つ</text>
+
+  <!-- GTM branch -->
+  <line x1="312" y1="336" x2="312" y2="372" stroke="#5b6470" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="221" y="378" width="182" height="74" rx="10" fill="#f4f5f7" stroke="#9aa3ad" stroke-width="1.5"/>
+  <text x="235" y="404" class="h">GTM の下書き</text>
+  <text x="235" y="428" class="b">誰が最初に使い、</text>
+  <text x="235" y="446" class="b m">どう伝えるか</text>
+
+  <!-- To Prototype -->
+  <line x1="907" y1="336" x2="907" y2="372" stroke="#5b6470" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="824" y="378" width="166" height="74" rx="10" fill="#b86e00"/>
+  <text x="907" y="410" text-anchor="middle" class="h" style="fill:#ffffff">Prototype へ</text>
+  <text x="907" y="434" text-anchor="middle" class="b" style="fill:#ffffff">test moment で確かめる</text>
+
+  <!-- North Star note -->
+  <text x="436" y="404" class="b m">North Star の数字は、PR/FAQ、PRD、</text>
+  <text x="436" y="424" class="b m">Validate の成功基準でも同じ値を使う</text>
+  <text x="436" y="444" class="b m">（違う値にするときは理由を書く）</text>
+</svg>

@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540" role="img" aria-labelledby="title desc">
+  <title id="title">commit、pivot、park の判断</title>
+  <desc id="desc">リスクレビューと GTM のエビデンスを、支持、反証、未決着に整理し、チームが commit、pivot、park のどれかを決めます。commit で最もリスクの高い前提がまだ開いている場合は、いま作るか、先に検証するかを選び、先に検証するなら開発前の条件を記録します。pivot は学びを残して問題を捉え直し、park はすべてを残していったん止めます。どの決定でも Discovery brief を書きます。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6470"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif; fill: #1d2733; }
+    .h { font-size: 16px; font-weight: 700; }
+    .b { font-size: 13px; }
+    .m { fill: #5b6470; }
+    .w { fill: #ffffff; }
+  </style>
+  <rect width="960" height="540" fill="#ffffff"/>
+
+  <!-- Evidence -->
+  <rect x="230" y="16" width="500" height="56" rx="10" fill="#f4f5f7" stroke="#9aa3ad" stroke-width="1.5"/>
+  <text x="480" y="40" text-anchor="middle" class="b" style="font-weight:700">リスクレビュー、GTM の完成、必要なら再採点</text>
+  <text x="480" y="60" text-anchor="middle" class="b m">エビデンスを「支持」「反証」「未決着」の 3 行にまとめる</text>
+  <line x1="480" y1="74" x2="480" y2="96" stroke="#5b6470" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Team decides -->
+  <rect x="230" y="102" width="500" height="56" rx="10" fill="#b23b3b"/>
+  <text x="480" y="126" text-anchor="middle" class="h w">チームが決める</text>
+  <text x="480" y="146" text-anchor="middle" class="b w">引き渡すプロトタイプのバージョンを選び、理由とともに決定を記録する</text>
+
+  <!-- Branch lines -->
+  <path d="M480,160 V178 M240,178 H835 M240,178 V196 M595,178 V196 M835,178 V196" fill="none" stroke="#5b6470" stroke-width="2"/>
+  <g fill="#5b6470"><path d="M234,192 L246,192 L240,202 Z"/><path d="M589,192 L601,192 L595,202 Z"/><path d="M829,192 L841,192 L835,202 Z"/></g>
+
+  <!-- commit -->
+  <rect x="20" y="204" width="440" height="56" rx="10" fill="#fbeaea" stroke="#b23b3b" stroke-width="2"/>
+  <text x="36" y="228" class="h">commit（進める）</text>
+  <text x="36" y="248" class="b">作る。Discovery brief が開発に渡る</text>
+  <line x1="240" y1="262" x2="240" y2="282" stroke="#5b6470" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="60" y="288" width="360" height="40" rx="20" fill="#ffffff" stroke="#b23b3b" stroke-width="1.5"/>
+  <text x="240" y="313" text-anchor="middle" class="b" style="font-weight:700">最もリスクの高い前提は、まだ開いているか</text>
+  <g stroke="#5b6470" stroke-width="2" marker-end="url(#arrow)">
+    <line x1="150" y1="330" x2="150" y2="352"/>
+    <line x1="330" y1="330" x2="330" y2="352"/>
+  </g>
+  <text x="140" y="346" text-anchor="end" class="b m">いいえ</text>
+  <text x="340" y="346" class="b m">はい</text>
+
+  <rect x="20" y="358" width="200" height="110" rx="10" fill="#ffffff" stroke="#9aa3ad" stroke-width="1.5"/>
+  <text x="36" y="384" class="b" style="font-weight:700">そのまま開発へ</text>
+  <text x="36" y="408" class="b">次のステップに書かれた</text>
+  <text x="36" y="428" class="b">方法で開発を始める</text>
+
+  <rect x="236" y="358" width="224" height="110" rx="10" fill="#ffffff" stroke="#9aa3ad" stroke-width="1.5"/>
+  <text x="252" y="384" class="b" style="font-weight:700">いま作るか、先に検証するか</text>
+  <text x="252" y="408" class="b">先に検証するなら、開発前の</text>
+  <text x="252" y="428" class="b">条件を記録する（何が本当なら</text>
+  <text x="252" y="448" class="b">進めるか、誰がいつまでに）</text>
+
+  <!-- pivot -->
+  <rect x="480" y="204" width="230" height="264" rx="10" fill="#f4f5f7" stroke="#9aa3ad" stroke-width="1.5"/>
+  <text x="496" y="228" class="h">pivot（方向転換する）</text>
+  <text x="496" y="256" class="b">学んだことを残し、</text>
+  <text x="496" y="276" class="b">問題を捉え直す</text>
+  <text x="496" y="306" class="b">何を変えるかを記録する</text>
+  <text x="496" y="336" class="b m">30 日後のフォローアップで、</text>
+  <text x="496" y="356" class="b m">捉え直した候補か、次点の</text>
+  <text x="496" y="376" class="b m">候補を取り上げる</text>
+
+  <!-- park -->
+  <rect x="730" y="204" width="210" height="264" rx="10" fill="#f4f5f7" stroke="#9aa3ad" stroke-width="1.5"/>
+  <text x="746" y="228" class="h">park（保留する）</text>
+  <text x="746" y="256" class="b">いったん止め、</text>
+  <text x="746" y="276" class="b">すべてを残す</text>
+  <text x="746" y="306" class="b">再開する条件を記録する</text>
+  <text x="746" y="336" class="b m">作らないと決めることも、</text>
+  <text x="746" y="356" class="b m">エビデンスにもとづく</text>
+  <text x="746" y="376" class="b m">よい結果</text>
+
+  <!-- Bottom -->
+  <rect x="20" y="484" width="920" height="40" rx="10" fill="#2f7d4f"/>
+  <text x="480" y="509" text-anchor="middle" class="b w" style="font-weight:700">どの決定でも、Handoff で Discovery brief を書く。エビデンスと未検証の仮説は失われない</text>
+</svg>

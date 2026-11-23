@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 320" width="960" height="320" role="img" aria-labelledby="title desc">
+  <title id="title">AI が下書きし、チームが決める</title>
+  <desc id="desc">AI アシスタントがデータを分析してエビデンスつきで下書きします。チームが読み、確定するか、理由をつけて上書きするか、異議を出します。異議や上書きがあればアシスタントが書き直します。チームがチェックポイントで合意したら、次のステップに進みます。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6470"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif; fill: #1d2733; }
+    .h { font-size: 17px; font-weight: 700; }
+    .b { font-size: 13px; }
+    .m { fill: #5b6470; }
+    .tag { font-size: 12px; font-weight: 700; }
+  </style>
+  <rect width="960" height="320" fill="#ffffff"/>
+
+  <!-- Node 1: AI drafts -->
+  <rect x="20" y="40" width="260" height="170" rx="14" fill="#f4f5f7" stroke="#9aa3ad" stroke-width="1.5"/>
+  <rect x="36" y="56" width="110" height="24" rx="12" fill="#5b6470"/>
+  <text x="91" y="73" text-anchor="middle" class="tag" style="fill:#ffffff">AI アシスタント</text>
+  <text x="36" y="110" class="h">分析し、下書きする</text>
+  <text x="36" y="140" class="b">・データを調べ、件数と引用を示す</text>
+  <text x="36" y="162" class="b">・主張にエビデンスラベルをつける</text>
+  <text x="36" y="184" class="b">・おすすめの答えを添えて聞く</text>
+
+  <line x1="284" y1="110" x2="346" y2="110" stroke="#5b6470" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Node 2: team reviews -->
+  <rect x="350" y="40" width="260" height="170" rx="14" fill="#e8f0f9" stroke="#1f4e79" stroke-width="2"/>
+  <rect x="366" y="56" width="60" height="24" rx="12" fill="#1f4e79"/>
+  <text x="396" y="73" text-anchor="middle" class="tag" style="fill:#ffffff">チーム</text>
+  <text x="366" y="110" class="h">読み、異議を出す</text>
+  <text x="366" y="140" class="b">・下書きを確定する</text>
+  <text x="366" y="162" class="b">・理由をつけて上書きする</text>
+  <text x="366" y="184" class="b">・知っている事実と欠落を伝える</text>
+
+  <line x1="614" y1="110" x2="676" y2="110" stroke="#5b6470" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Node 3: team decides -->
+  <rect x="680" y="40" width="260" height="170" rx="14" fill="#e8f0f9" stroke="#1f4e79" stroke-width="2"/>
+  <rect x="696" y="56" width="60" height="24" rx="12" fill="#1f4e79"/>
+  <text x="726" y="73" text-anchor="middle" class="tag" style="fill:#ffffff">チーム</text>
+  <text x="696" y="110" class="h">決めて、次へ進む</text>
+  <text x="696" y="140" class="b">・チェックポイントで合意する</text>
+  <text x="696" y="162" class="b">・決めたことはファイルに残る</text>
+  <text x="696" y="184" class="b">・次のステップの入力になる</text>
+
+  <!-- return loop from node 2 to node 1 -->
+  <path d="M480,214 V262 H150 V218" fill="none" stroke="#5b6470" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+  <text x="315" y="290" text-anchor="middle" class="b m">異議や上書きがあれば、アシスタントが書き直す</text>
+</svg>

@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 380" width="960" height="380" role="img" aria-labelledby="title desc">
+  <title id="title">プレモーテムの考え方</title>
+  <desc id="desc">時間軸の上で、今日の Validate から、ローンチを経て 90 日後に機能が失敗したと仮定します。その地点から今日へさかのぼって失敗の理由を挙げます。理由ごとに、ローンチ後に現れる早期の兆候と、今できる予防策を決めます。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6470"/>
+    </marker>
+    <marker id="arrowR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#b23b3b"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif; fill: #1d2733; }
+    .h { font-size: 15px; font-weight: 700; }
+    .b { font-size: 13px; }
+    .m { fill: #5b6470; }
+  </style>
+  <rect width="960" height="380" fill="#ffffff"/>
+
+  <!-- Backward arrow -->
+  <path d="M836,124 C700,50 260,50 128,124" fill="none" stroke="#b23b3b" stroke-width="2.5" marker-end="url(#arrowR)"/>
+  <text x="480" y="40" text-anchor="middle" class="h" style="fill:#b23b3b">「なぜ失敗したのか」を、失敗した地点から考える</text>
+
+  <!-- Timeline -->
+  <line x1="60" y1="170" x2="910" y2="170" stroke="#5b6470" stroke-width="2" marker-end="url(#arrow)"/>
+  <circle cx="120" cy="170" r="9" fill="#b23b3b"/>
+  <text x="120" y="150" text-anchor="middle" class="h">今日</text>
+  <text x="120" y="198" text-anchor="middle" class="b m">Validate</text>
+
+  <circle cx="420" cy="170" r="7" fill="#5b6470"/>
+  <text x="420" y="150" text-anchor="middle" class="h">ローンチ</text>
+
+  <g fill="#fff4d6" stroke="#b86e00" stroke-width="1.5">
+    <rect x="552" y="162" width="16" height="16" rx="3" transform="rotate(45 560 170)"/>
+    <rect x="672" y="162" width="16" height="16" rx="3" transform="rotate(45 680 170)"/>
+  </g>
+  <text x="620" y="150" text-anchor="middle" class="b" style="fill:#8a5a00;font-weight:700">早期の兆候</text>
+  <text x="620" y="198" text-anchor="middle" class="b m">兆候が出たら手を打つ</text>
+
+  <rect x="776" y="128" width="122" height="84" rx="10" fill="#fbeaea" stroke="#b23b3b" stroke-width="2"/>
+  <text x="837" y="154" text-anchor="middle" class="h" style="fill:#b23b3b">90 日後</text>
+  <text x="837" y="178" text-anchor="middle" class="b">失敗した、と</text>
+  <text x="837" y="198" text-anchor="middle" class="b">仮定する</text>
+
+  <!-- Steps today -->
+  <line x1="120" y1="210" x2="120" y2="238" stroke="#5b6470" stroke-width="2" marker-end="url(#arrow)"/>
+  <g fill="#f4f5f7" stroke="#9aa3ad" stroke-width="1.5">
+    <rect x="40" y="244" width="250" height="100" rx="10"/>
+    <rect x="310" y="244" width="250" height="100" rx="10"/>
+    <rect x="580" y="244" width="340" height="100" rx="10"/>
+  </g>
+  <g stroke="#5b6470" stroke-width="2" marker-end="url(#arrow)">
+    <line x1="292" y1="294" x2="307" y2="294"/>
+    <line x1="562" y1="294" x2="577" y2="294"/>
+  </g>
+  <text x="56" y="272" class="h">1. 全員が理由を書く</text>
+  <text x="56" y="298" class="b">誰かが話す前に、一人ずつ</text>
+  <text x="56" y="318" class="b">書く。チームの理由が先</text>
+  <text x="326" y="272" class="h">2. 5 つに絞る</text>
+  <text x="326" y="298" class="b">アシスタントがエビデンスから</text>
+  <text x="326" y="318" class="b">理由を足し、起こりやすい順に</text>
+  <text x="596" y="272" class="h">3. 兆候と予防策を決める</text>
+  <text x="596" y="298" class="b">理由ごとに、ローンチ後に現れる早期の兆候と、</text>
+  <text x="596" y="318" class="b">今できる予防策を書く</text>
+  <path d="M750,240 V214 H620 V204" fill="none" stroke="#b86e00" stroke-width="1.5" stroke-dasharray="4 4"/>
+</svg>
